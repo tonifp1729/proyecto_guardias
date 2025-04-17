@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de ausencias</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    
+</head>
+    <body>
+
+        <!-- VISTA INICIO DE SESIÓN --------------------------------------------------------------------------------->
+        <div id="login">
+            <h1>Estás por acceder al gestor de ausencias</h1>
+            <p id="mensaje">Por favor, introduce tus credenciales para acceder.</p>
+            <div class="g-signin2" data-onsuccess="onSignIn">Identifícate</div>
+        </div>
+
+        <!-- VISTA ACCESO DENEGADO ----------------------------------------------------------------------------------->
+        <div id="acceso-denegado">
+            <h1>Acceso Denegado</h1>
+            <p>No tiene permiso para acceder a este dominio. Por favor, use el correo de la fundación.</p>
+            <button onclick="window.close()">Cerrar</button>
+            <button onclick="window.location.href='https://www.google.com'">Volver</button>
+        </div>
+
+        <!-- VISTA INICIAL ------------------------------------------------------------------------------------------->
+        <div id="vista-inicial">
+            <h1>Usuario verificado. Tienes acceso a la plataforma.</h1>
+            <button onclick="mostrarSidebarYVista('vista-saludo')">Continuar</button>
+        </div>
+
+        <!-- SIDEBAR ------------------------------------------------------------------------------------------------->
+        <div class="sidebar">
+            <h2>Menú</h2>
+            <ul>
+                <li><a id="enlace-listar-cursos" href="#">Lista de Cursos Académicos</a></li>
+                <li><a id="enlace-alta-curso" href="#">Alta de Curso Académico</a></li>
+                <li><a id="enlace-lista-usuarios" href="#">Lista de Usuarios</a></li>
+            </ul>
+            <div class="logout">
+                <a href="#">Cerrar Sesión</a>
+            </div>
+        </div>
+
+        <!-- Mensaje de bienvenida -->
+        <div id="vista-saludo">
+            <h1>¡Bienvenido al gestor de ausencias!</h1>
+            <p>Este es tu panel de control. A tu izquierda puedes ver las opciones disponibles para ti.</p>
+        </div>
+
+        <!-- MENÚ DE ADMINISTRADOR ----------------------------------------------------------------------------------->
+        <!-- VISTA INICIAR CURSO -->
+
+        <div id="alta-curso" class="content-section">
+
+            <h2>Alta de Curso Académico</h2>
+            <p>Formulario para registrar un nuevo curso académico.</p>
+
+            <!-- Formulario para registrar curso académico -->
+            <form id="form-curso">
+                <label>Fecha de Inicio:</label>
+                <input type="date" id="fechaInicio" name="fechaInicio" required>
+        
+                <label>Fecha de Fin:</label>
+                <input type="date" id="fechaFin" name="fechaFin" required>
+
+                <button class="tamanio" type="submit">Crear Curso</button>
+            </form>
+
+        </div>
+
+        <!-- VISTA LISTAR CURSOS -->
+        <div id="listar-cursos" class="content-section">
+            
+            <h2>Curso Activo</h2>
+            <p id="curso-activo">2024/2025</p> <!-- Muestra el curso activo -->
+
+            <h3>Historial de Cursos Académicos</h3>
+            <table id="tabla-cursos" style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Año Académico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se agregarán los cursos anteriores dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- VISTA LISTAR USUARIOS -->
+        <div id="lista-usuarios">
+            <!-- Aquí se cargará la lista de los usuarios  -->
+        </div>
+
+        <!-- VISTA ROLES USUARIO -->
+        <div id="modificar-usuario">
+            <h2>Editar Usuario</h2>
+            <form id="form-editar-usuario">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" readonly><br>
+                
+                <label for="correo">Correo:</label>
+                <input type="text" id="correo" readonly><br>
+        
+                <label for="rol">Rol:</label>
+                <select id="rol">
+                    <option value="U">Usuario</option>
+                    <option value="M">Moderador</option>
+                    <option value="A">Administrador</option>
+                </select><br>
+        
+                <label for="etapas">Etapas:</label>
+                <select id="etapas" multiple>
+                    <!-- Etapas disponibles -->
+                </select><br>
+        
+                <button type="button" onclick="guardarCambios()">Guardar Cambios</button>
+            </form>
+        </div>        
+
+        <!-- MENÚ DEL MODERADOR -------------------------------------------------------------------------------------->
+        <!-- Script para el control y visualizado de los elementos de las vistas -->
+        <script src="js/controlVistas.js"></script>
+        
+    </body>
+</html>

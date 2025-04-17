@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Panel de Moderador</title>
+        <link rel="stylesheet" href="estilo.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <!-- Sidebar fijo -->
+        <div class="sidebar">
+            <h2>Menú Moderador</h2>
+            <ul>
+                <li><a href="#" onclick="mostrarFormulario(); ocultarBienvenida();">Nueva Solicitud</a></li>
+                <li><a href="#" onclick="mostrarSeccion('solicitudes-propias'); ocultarBienvenida();">Solicitudes Propias</a></li>
+                <li><a href="#" onclick="mostrarSeccion('ver-lista'); ocultarBienvenida();">Ver Lista de Solicitudes</a></li>
+                <li><a href="#" onclick="mostrarSeccion('comprobar-estadisticas'); ocultarBienvenida();">Comprobar Estadísticas</a></li>
+            </ul>
+            <div class="logout">
+                <a href="#">Cerrar Sesión</a>
+            </div>
+        </div>
+
+        <!-- Área principal -->
+        <div class="main-content">
+            <!-- Mensaje de bienvenida -->
+            <div id="bienvenida">
+                <h1>Bienvenido, Moderador</h1>
+                <p>Esta es tu vista principal, desde aquí puedes gestionar las solicitudes de ausencia y estadísticas.</p>
+            </div>
+
+            <!-- Formulario de solicitud -->
+            <section id="solicitud-container" class="content-section" style="display: none;">
+                <h1>Nueva Solicitud</h1>
+                <form>
+                    <div>
+                        <label for="asunto">Asunto de la Ausencia:</label>
+                        <select name="asunto" id="asunto" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="enfermedad">Enfermedad / Baja Médica</option>
+                            <option value="problema-familiar">Problema Familiar</option>
+                            <option value="visita-medica">Visita Médica</option>
+                            <option value="cambio-domicilio">Cambio de Domicilio</option>
+                            <option value="dia-sin-sueldo">Día/s sin Sueldo</option>
+                            <option value="formacion-reunion">Formación / Reunión</option>
+                            <option value="experiencias">Experiencias</option>
+                            <option value="actividad-extraescolar">Actividad Extraescolar / Complementaria</option>
+                            <option value="baja-maternidad-paternidad">Baja por Maternidad / Paternidad</option>
+                            <option value="matrimonio">Matrimonio</option>
+                            <option value="asuntos-propios">Asuntos Propios</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Justificación de la Ausencia:</label>
+                        <textarea name="justificacion" rows="4" required></textarea>
+                    </div>
+                    <div>
+                        <label>Subir Justificante:</label>
+                        <input type="file" name="justificante" accept=".pdf, .jpg, .png" required>
+                    </div>
+                    <div>
+                        <label>Fecha de Inicio:</label>
+                        <input type="date" id="fecha-inicio" name="fecha-inicio" onchange="toggleHoras()" required>
+                    </div>
+                    <div>
+                        <label>Fecha de Fin:</label>
+                        <input type="date" id="fecha-fin" name="fecha-fin" onchange="toggleHoras()" required>
+                    </div>
+                    <div>
+                        <label>Material de Guardia:</label>
+                        <input type="file" name="material" accept=".pdf, .jpg, .png">
+                    </div>
+                    <div>
+                        <label>Observaciones:</label>
+                        <textarea name="observaciones" rows="4"></textarea>
+                    </div>
+                    
+                    <!-- Campos de selección de horas -->
+                    <div id="horas-group" style="display: none;">
+                        <h3>Selecciona Horas:</h3>
+                        <label><input type="checkbox" name="horas[]" value="1"> 1ª Hora</label>
+                        <label><input type="checkbox" name="horas[]" value="2"> 2ª Hora</label>
+                        <label><input type="checkbox" name="horas[]" value="3"> 3ª Hora</label>
+                        <label><input type="checkbox" name="horas[]" value="4"> 4ª Hora</label>
+                        <label><input type="checkbox" name="horas[]" value="5"> 5ª Hora</label>
+                        <label><input type="checkbox" name="horas[]" value="6"> 6ª Hora</label>
+                        <label><input type="checkbox" name="horas[]" value="7"> 7ª Hora</label>
+                    </div>
+
+                    <!-- Checkbox "Todo el Día" -->
+                    <div id="checkbox-todo-el-dia" style="display: none;">
+                        <label>
+                            <input type="checkbox" id="todo-el-dia" onchange="activarHoras()"> Todo el Día
+                        </label>
+                    </div>
+
+                     <!-- Botón Enviar Solicitud -->
+                    <div id="enviar-container">
+                        <button class="tamanio" type="submit">Enviar Solicitud</button>
+                    </div>
+                </form>
+            </section>
+
+             <!-- Sección Ver Lista de Solicitudes -->
+             <section id="solicitudes-propias" class="content-section" style="display: none;">
+                <h2>Ver Lista de Solicitudes</h2>
+                <p>Aquí puedes ver todas las solicitudes de ausencia.</p>
+
+                <!-- Tabla con las solicitudes -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Número Solicitud</th>
+                            <th>Docente</th>
+                            <th>Asunto</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Estado</th>
+                            <th>Activa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-color="verde">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('verde');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241002_01</td>
+                            <td>Juan Pérez</td>
+                            <td>Revisión Médica</td>
+                            <td>2024-10-12</td>
+                            <td>2024-10-13</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo verde"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Sección para consultar una solicitud -->
+            <section id="detalles-solicitud" class="content-section" style="display: none;">
+                <h2>Detalles de la Solicitud</h2>
+                <form>
+                    <div>
+                        <label>Asunto de la Ausencia:</label>
+                        <select name="asunto" id="asunto" required>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Justificación de la Ausencia:</label>
+                        <textarea name="justificacion" rows="4" required></textarea>
+                    </div>
+                    <div>
+                        <label>Subir Justificante:</label>
+                        <input type="file" name="justificante" accept=".pdf, .jpg, .png" required>
+                    </div>
+                    <div>
+                        <label>Fecha de Inicio:</label>
+                        <input type="date" name="fecha-inicio" required>
+                    </div>
+                    <div>
+                        <label>Fecha de Fin:</label>
+                        <input type="date" name="fecha-fin" required>
+                    </div>
+                    <div>
+                        <label>Material de Guardia:</label>
+                        <input type="file" name="material" accept=".pdf, .jpg, .png">
+                    </div>
+                    <div>
+                        <label>Observaciones:</label>
+                        <textarea name="observaciones" rows="4"></textarea>
+                    </div>
+                   
+                    <!-- Iconos de acción estilizados según el color del semáforo -->
+                    <div id="botones-acciones" class="acciones-contenedor">
+                        <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('verde', 'solicitudes-propias');">
+                            <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                        </a>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Sección Ver Lista de Solicitudes -->
+            <section id="ver-lista" class="content-section" style="display: none;">
+                <h2>Ver Lista de Solicitudes</h2>
+                <p>Aquí puedes ver todas las solicitudes de ausencia.</p>
+
+                <!-- Filtro de solicitudes -->
+                <div id="filtro">
+                    <label><input type="checkbox" id="aceptadas"> Aceptadas</label>
+                    <label><input type="checkbox" id="pendientes"> Pendientes</label>
+                    <label><input type="checkbox" id="rechazadas"> Rechazadas</label>
+                    <label><input type="checkbox" id="activa"> Activa</label>
+                    <label><input type="checkbox" id="inactiva"> Inactiva</label>
+                
+                    <!-- Botón de filtro -->
+                    <button onclick="filtrarSolicitudes()">Filtrar</button>
+                </div>
+
+                <!-- Tabla con las solicitudes -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Número Solicitud</th>
+                            <th>Docente</th>
+                            <th>Asunto</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Estado</th>
+                            <th>Activa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ejemplo 1: Aceptado (Verde) - Moderador solo puede borrar -->
+                        <tr data-color="verde">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('verde');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241101_01</td>
+                            <td>Laura Sánchez</td>
+                            <td>Enfermedad / Baja Médica</td>
+                            <td>2024-11-05</td>
+                            <td>2024-11-07</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo verde"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 2: Rechazado (Amarillo) - Moderador solo puede modificar -->
+                        <tr data-color="amarillo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241201_02</td>
+                            <td>Daniel Ortega</td>
+                            <td>Problema Familiar</td>
+                            <td>2024-12-03</td>
+                            <td>2024-12-04</td>
+                            <td>Rechazada</td>
+                            <td><span class="semáforo amarillo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 3: Pendiente (Verde) - Moderador puede modificar y borrar -->
+                        <tr data-color="verde">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('verde');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241110_03</td>
+                            <td>Sofía Martínez</td>
+                            <td>Visita Médica</td>
+                            <td>2024-11-15</td>
+                            <td>2024-11-16</td>
+                            <td>Pendiente</td>
+                            <td><span class="semáforo verde"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 4: Pendiente (Rojo) - Moderador puede ver y borrar -->
+                        <tr data-color="rojo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('rojo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241125_04</td>
+                            <td>Iván Navarro</td>
+                            <td>Cambio de Domicilio</td>
+                            <td>2024-11-27</td>
+                            <td>2024-11-30</td>
+                            <td>Pendiente</td>
+                            <td><span class="semáforo rojo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 5: Rechazado (Rojo) - Moderador solo puede ver y borrar -->
+                        <tr data-color="rojo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('rojo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241202_05</td>
+                            <td>Carolina Ríos</td>
+                            <td>Día/s sin Sueldo</td>
+                            <td>2024-12-05</td>
+                            <td>2024-12-07</td>
+                            <td>Rechazada</td>
+                            <td><span class="semáforo rojo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 6: Aceptado (Rojo) - Moderador solo puede ver y borrar -->
+                        <tr data-color="rojo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('rojo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241210_06</td>
+                            <td>Esteban Blanco</td>
+                            <td>Formación / Reunión</td>
+                            <td>2024-12-12</td>
+                            <td>2024-12-13</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo rojo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 7: Pendiente (Amarillo) - Moderador puede modificar y borrar -->
+                        <tr data-color="amarillo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241118_07</td>
+                            <td>Patricia Delgado</td>
+                            <td>Baja por Maternidad / Paternidad</td>
+                            <td>2024-11-20</td>
+                            <td>2025-02-20</td>
+                            <td>Pendiente</td>
+                            <td><span class="semáforo amarillo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 8: Aceptado (Amarillo) - Moderador solo puede borrar -->
+                        <tr data-color="amarillo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241130_08</td>
+                            <td>Fernando Pérez</td>
+                            <td>Matrimonio</td>
+                            <td>2024-12-01</td>
+                            <td>2024-12-03</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo amarillo"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+             
+            <!-- Sección para consultar una solicitud -->
+            <section id="detalles-solicitud" class="content-section" style="display: none;">
+                <h2>Detalles de la Solicitud</h2>
+                <form>
+                    <div>
+                        <label>Asunto de la Ausencia:</label>
+                        <select name="asunto" id="asunto" required>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Justificación de la Ausencia:</label>
+                        <textarea name="justificacion" rows="4" required></textarea>
+                    </div>
+                    <div>
+                        <label>Subir Justificante:</label>
+                        <input type="file" name="justificante" accept=".pdf, .jpg, .png" required>
+                    </div>
+                    <div>
+                        <label>Fecha de Inicio:</label>
+                        <input type="date" name="fecha-inicio" required>
+                    </div>
+                    <div>
+                        <label>Fecha de Fin:</label>
+                        <input type="date" name="fecha-fin" required>
+                    </div>
+                    <div>
+                        <label>Material de Guardia:</label>
+                        <input type="file" name="material" accept=".pdf, .jpg, .png">
+                    </div>
+                    <div>
+                        <label>Observaciones:</label>
+                        <textarea name="observaciones" rows="4"></textarea>
+                    </div>
+                   
+                    <!-- Iconos de acción estilizados según el color del semáforo -->
+                    <div id="botones-acciones" class="acciones-contenedor">
+                        <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo', 'ver-lista');">
+                            <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                        </a>
+                        <a href="#" title="Rechazar Solicitud" onclick="rechazarSolicitud()" class="accion-icono">
+                            <img src="iconos/rechazar.svg" alt="Rechazar">
+                        </a>
+                        <a href="#" title="Aceptar Solicitud" onclick="aceptarSolicitud()" class="accion-icono">
+                            <img src="iconos/aceptar.svg" alt="Aceptar">
+                        </a>
+                    </div>
+
+                </form>
+            </section>
+
+        </div>
+
+        <script>
+            // Código de manejo de visualización y acciones
+            function mostrarFormulario() {
+                document.getElementById('solicitud-container').style.display = 'block';
+                document.getElementById('bienvenida').style.display = 'none';
+            }
+
+            function ocultarBienvenida() {
+                document.getElementById('bienvenida').style.display = 'none';
+            }
+
+            function mostrarSeccion(seccion) {
+                const secciones = document.querySelectorAll('.content-section');
+                secciones.forEach(seccion => seccion.style.display = 'none');
+                document.getElementById(seccion).style.display = 'block';
+            }
+
+            function toggleHoras() {
+                let fechaInicio = document.getElementById('fecha-inicio').value;
+                let fechaFin = document.getElementById('fecha-fin').value;
+                if (fechaInicio !== fechaFin) {
+                    document.getElementById('horas-group').style.display = 'block';
+                    document.getElementById('checkbox-todo-el-dia').style.display = 'block';
+                } else {
+                    document.getElementById('horas-group').style.display = 'none';
+                    document.getElementById('checkbox-todo-el-dia').style.display = 'none';
+                }
+            }
+
+            function activarHoras() {
+                if (document.getElementById('todo-el-dia').checked) {
+                    const horas = document.querySelectorAll('[name="horas[]"]');
+                    horas.forEach(checkbox => checkbox.checked = false);
+                    document.getElementById('horas-group').style.display = 'none';
+                } else {
+                    document.getElementById('horas-group').style.display = 'block';
+                }
+            }
+            // Función para consultar la solicitud y mostrar iconos según el color del semáforo
+            function mostrarDetallesSolicitud(color, seccionOrigen) {
+                mostrarSeccion('detalles-solicitud');
+                
+                const botonesAcciones = document.getElementById('botones-acciones');
+                botonesAcciones.innerHTML = `
+                    <a href="#" title="Volver a la Lista" onclick="volverALista('${seccionOrigen}');" class="accion-icono">
+                        <img src="iconos/volver.svg" alt="Volver a la Lista">
+                    </a>
+                `;
+                
+                if (color === 'verde' || color === 'amarillo') {
+                    botonesAcciones.innerHTML += `
+                        <a href="#" title="Aceptar" class="accion-icono">
+                            <img src="iconos/aceptar.svg" alt="Aceptar">
+                        </a>
+                        <a href="#" title="Rechazar" class="accion-icono">
+                            <img src="iconos/rechazar.svg" alt="Rechazar">
+                        </a>
+                    `;
+                } else if (color === 'rojo') {
+                    botonesAcciones.innerHTML += `
+                        <a href="#" title="Borrar" class="accion-icono">
+                            <img src="iconos/borrar.svg" alt="Borrar">
+                        </a>
+                        <a href="#" title="Modificar" class="accion-icono">
+                            <img src="iconos/modificar.svg" alt="Modificar">
+                        </a>
+                    `;
+                }
+            }
+
+            function filtrarSolicitudes() {
+                    // Obtener los checkboxes
+                    const aceptadas = document.getElementById('aceptadas').checked;
+                    const pendientes = document.getElementById('pendientes').checked;
+                    const rechazadas = document.getElementById('rechazadas').checked;
+                    const activa = document.getElementById('verde').checked;
+
+                    // Obtener todas las filas de la tabla
+                    const filas = document.querySelectorAll('#ver-lista table tbody tr');
+
+                // Iterar por cada fila
+                filas.forEach(fila => {
+                    const estado = fila.cells[6].innerText.trim().toLowerCase(); // Estado en la columna "Estado"
+                    const color = fila.getAttribute('data-color'); // Color en el atributo data-color
+
+                    let mostrar = false;
+
+                    // Filtros por estado
+                    if ((estado === 'aceptada' && aceptadas) ||
+                        (estado === 'pendiente' && pendientes) ||
+                        (estado === 'rechazada' && rechazadas)) {
+                        mostrar = true;
+                    }
+
+                    // Filtros por actividad (color)
+                    if (activa) {
+                        if (color === 'verde' || color === 'amarillo') {
+                            mostrar = true;
+                        } else {
+                            mostrar = false; // Ignorar si es inactiva y activa está marcada
+                        }
+                    } else if (!activa && (color === 'rojo')) {
+                        mostrar = true;
+                    }
+
+                    // Mostrar/ocultar fila según el filtro
+                    fila.style.display = mostrar ? '' : 'none';
+                });
+            }
+        </script>
+    </body>
+</html>

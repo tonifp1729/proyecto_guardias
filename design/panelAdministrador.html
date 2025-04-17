@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Panel de Administrador</title>
+        <link rel="stylesheet" href="estilo.css"> <!-- Se debe usar la misma hoja de estilos que el panel de usuario -->
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+         <!-- Sidebar fijo -->
+        <div class="sidebar">
+            <h2>Menú Administrador</h2>
+            <ul>
+                <li><a href="#" onclick="mostrarSeccion('alta-usuarios'); ocultarBienvenida();">Alta de Usuarios</a></li>
+                <li><a href="#" onclick="mostrarSeccion('lista-usuarios'); ocultarBienvenida();">Lista de Usuarios</a></li>
+                <li><a href="#" onclick="mostrarSeccion('alta-curso'); ocultarBienvenida();">Alta de Curso Académico</a></li>
+                <li><a href="#" onclick="mostrarSeccion('listar-cursos'); ocultarBienvenida();">Lista de Cursos Académicos</a></li>
+                <li><a href="#" onclick="mostrarSeccion('gestionar-solicitudes'); ocultarBienvenida();">Gestión de Solicitudes</a></li>
+                <li><a href="#" onclick="mostrarSeccion('gestiones'); ocultarBienvenida();">Gestiones de Moderadores</a></li>
+                <li><a href="#" onclick="mostrarSeccion('comprobar-estadisticas'); ocultarBienvenida();">Comprobar Estadísticas</a></li>
+            </ul>
+            <div class="logout">
+                <a href="#">Cerrar Sesión</a>
+            </div>
+        </div>
+
+        <!-- Área principal -->
+        <div class="main-content">
+            <!-- Mensaje de bienvenida -->
+            <div id="bienvenida">
+                <h1>Bienvenido, Administrador</h1>
+                <p>Esta es tu vista principal, desde aquí puedes gestionar las solicitudes de ausencia y estadísticas.</p>
+            </div>
+
+            <!-- Sección para alta de solicitud de usuario -->
+            <section id="alta-usuarios" class="content-section" style="display: none;">
+                <h2>Alta de Usuario</h2>
+                <p>Formulario para registrar un nuevo usuario.</p>
+                
+                <!-- Formulario para registrar usuario (usar el mismo id "form-usuario" del panel de usuario) -->
+                <form >
+                    <label>Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" required placeholder="ejemplo@dominio.com">
+                
+                    <label>Confirmar Correo Electrónico:</label>
+                    <input type="email" id="confirmar-email" name="confirmar-email" required placeholder="ejemplo@dominio.com" oninput="validarCorreo()">
+                
+                    <!-- Mensaje de error en caso de que los correos no coincidan -->
+                    <p id="mensaje-error">Los correos electrónicos no coinciden.</p> 
+                </form>
+                <div><button class="tamanio" type="submit">Crear Cuenta</button></div>
+            </section>
+
+            <!-- Sección para listar usuarios -->
+            <section id="lista-usuarios" class="content-section" style="display: none;">
+                <h2>Lista de Usuarios</h2>
+                <p>Listado de usuarios del sistema.</p>
+
+                <!-- Tabla para mostrar la lista de usuarios -->
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th>Correo</th>
+                            <th>Accciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan</td>
+                            <td>Perez</td>
+                            <td>juanperez.guadalupe@profesorado.fundacionloyola.net</td>
+                            <td>
+                                <a href="#" onclick="editarUsuario('Juan', 'Perez', 'juanperez.guadalupe@profesorado.fundacionloyola.net', 'U', [])" title="Modificar">
+                                    <img src="iconos/modificar.svg" alt="Modificar" width="24" height="24">
+                                </a>
+                                <a href="#" onclick="confirmarBorrarUsuario('Juan', 'Perez', 'juanperez.guadalupe@profesorado.fundacionloyola.net')" title="Borrar">
+                                    <img src="iconos/borrar.svg" alt="Borrar" width="24" height="24">
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ana</td>
+                            <td>Martinez Almonte</td>
+                            <td>anamartinezalmonte.guadalupe@profesorado.fundacionloyola.net</td>
+                            <td>
+                                <a href="#" onclick="editarUsuario('Ana', 'Martinez Almonte', 'anamartinezalmonte.guadalupe@profesorado.fundacionloyola.net', 'U', [])" title="Modificar">
+                                    <img src="iconos/modificar.svg" alt="Modificar" width="24" height="24">
+                                </a>
+                                <a href="#" onclick="confirmarBorrarUsuario('Ana', 'Martinez Almonte', 'anamartinezalmonte.guadalupe@profesorado.fundacionloyola.net')" title="Borrar">
+                                    <img src="iconos/borrar.svg" alt="Borrar" width="24" height="24">
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <!-- Sección para alta de curso académico -->
+            <section id="alta-curso" class="content-section" style="display: none;">
+                <h2>Alta de Curso Académico</h2>
+                <p>Formulario para registrar un nuevo curso académico.</p>
+                
+                <!-- Formulario para registrar curso académico -->
+                <form id="form-curso">
+                    <label>Fecha de Inicio:</label>
+                    <input type="date" id="fechaInicio" name="fechaInicio" required>
+            
+                    <label>Fecha de Fin:</label>
+                    <input type="date" id="fechaFin" name="fechaFin" required>
+
+                    <button class="tamanio" type="submit">Crear Curso</button>
+                </form>
+            </section>
+
+            <!-- Sección para listar cursos académicos -->
+            <section id="listar-cursos" class="content-section" style="display: none;">
+                <h2>Curso Activo</h2>
+                <p id="curso-activo"></p> <!-- Siempre muestra el curso activo -->
+
+                <h3>Historial de Cursos Académicos</h3>
+                <table id="tabla-cursos" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Año Académico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se agregarán los cursos anteriores dinámicamente -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Formulario para modificar usuario -->
+            <section id="editar-usuario" class="content-section" style="display: none;">
+                <h2>Modificar Usuario</h2>
+                <form id="form-editar-usuario">
+                    <label>Correo Electrónico:</label>
+                    <input type="email" id="editar-email" name="editar-email" readonly>
+
+                    <label>Rol:</label>
+                    <select id="editar-rol" name="editar-rol">
+                        <option value="A">Administrador</option>
+                        <option value="M">Moderador</option>
+                        <option value="U">Usuario</option>
+                    </select>
+                    
+                    <br><br>
+                    
+                    <label>Etapas:</label>
+                    <!-- Grupo de checkboxes para seleccionar múltiples etapas -->
+                    <div id="etapas-checkboxes">
+                        <label><input type="checkbox" name="etapa" value="I"> Infantil</label><br>
+                        <label><input type="checkbox" name="etapa" value="P"> Primaria</label><br>
+                        <label><input type="checkbox" name="etapa" value="E"> ESO</label><br>
+                        <label><input type="checkbox" name="etapa" value="B"> Bachillerato</label><br>
+                        <label><input type="checkbox" name="etapa" value="F"> Formación Profesional</label><br>
+                    </div>
+                    
+                    <button type="button" onclick="guardarCambiosUsuario()">Guardar Cambios</button>
+                </form>
+            </section>
+
+            <!-- Sección para gestión de solicitudes de ausencias -->
+            <section id="gestionar-solicitudes" class="content-section" style="display: none;">
+                <h2>Solicitudes de Ausencia - Curso Activo</h2>
+                <table style="width:100%; border-collapse: collapse;">
+                    <!-- Tabla con las solicitudes -->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Número Solicitud</th>
+                            <th>Docente</th>
+                            <th>Asunto</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Estado</th>
+                            <th>Activa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ejemplo 1: Aceptado (Verde) - Moderador solo puede borrar -->
+                        <tr data-color="verde">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('verde');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241101_01</td>
+                            <td>Laura Sánchez</td>
+                            <td>Enfermedad / Baja Médica</td>
+                            <td>2024-11-05</td>
+                            <td>2024-11-07</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo verde"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 2: Rechazado (Amarillo) - Moderador solo puede modificar -->
+                        <tr data-color="amarillo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241201_02</td>
+                            <td>Daniel Ortega</td>
+                            <td>Problema Familiar</td>
+                            <td>2024-12-03</td>
+                            <td>2024-12-04</td>
+                            <td>Rechazada</td>
+                            <td><span class="semáforo amarillo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 3: Pendiente (Verde) - Moderador puede modificar y borrar -->
+                        <tr data-color="verde">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('verde');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241110_03</td>
+                            <td>Sofía Martínez</td>
+                            <td>Visita Médica</td>
+                            <td>2024-11-15</td>
+                            <td>2024-11-16</td>
+                            <td>Pendiente</td>
+                            <td><span class="semáforo verde"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 4: Pendiente (Rojo) - Moderador puede ver y borrar -->
+                        <tr data-color="rojo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('rojo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241125_04</td>
+                            <td>Iván Navarro</td>
+                            <td>Cambio de Domicilio</td>
+                            <td>2024-11-27</td>
+                            <td>2024-11-30</td>
+                            <td>Pendiente</td>
+                            <td><span class="semáforo rojo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 5: Rechazado (Rojo) - Moderador solo puede ver y borrar -->
+                        <tr data-color="rojo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('rojo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241202_05</td>
+                            <td>Carolina Ríos</td>
+                            <td>Día/s sin Sueldo</td>
+                            <td>2024-12-05</td>
+                            <td>2024-12-07</td>
+                            <td>Rechazada</td>
+                            <td><span class="semáforo rojo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 6: Aceptado (Rojo) - Moderador solo puede ver y borrar -->
+                        <tr data-color="rojo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('rojo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241210_06</td>
+                            <td>Esteban Blanco</td>
+                            <td>Formación / Reunión</td>
+                            <td>2024-12-12</td>
+                            <td>2024-12-13</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo rojo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 7: Pendiente (Amarillo) - Moderador puede modificar y borrar -->
+                        <tr data-color="amarillo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241118_07</td>
+                            <td>Patricia Delgado</td>
+                            <td>Baja por Maternidad / Paternidad</td>
+                            <td>2024-11-20</td>
+                            <td>2025-02-20</td>
+                            <td>Pendiente</td>
+                            <td><span class="semáforo amarillo"></span></td>
+                        </tr>
+
+                        <!-- Ejemplo 8: Aceptado (Amarillo) - Moderador solo puede borrar -->
+                        <tr data-color="amarillo">
+                            <td>
+                                <a href="#" title="Consultar" onclick="mostrarDetallesSolicitud('amarillo');">
+                                    <img src="iconos/consultar.svg" alt="Consultar" width="24" height="24">
+                                </a>
+                            </td>
+                            <td>20241130_08</td>
+                            <td>Fernando Pérez</td>
+                            <td>Matrimonio</td>
+                            <td>2024-12-01</td>
+                            <td>2024-12-03</td>
+                            <td>Aceptada</td>
+                            <td><span class="semáforo amarillo"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+             <!-- Sección para listar cursos académicos y curso activo -->
+            <section id="listar-cursos" class="content-section" style="display: none;">
+                <h2>Curso Activo</h2>
+                <p id="curso-activo">2024/2025</p>
+
+                <h3>Historial de Cursos Académicos</h3>
+                <table id="tabla-cursos" style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th>Año Académico</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2023/2024</td>
+                            <td><a href="#" onclick="eliminarCurso('2023/2024')" title="Eliminar">Eliminar</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Modal de Confirmación para borrar usuario -->
+            <div id="modal-confirmar-borrado" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h3>¿Estás seguro de que deseas borrar este usuario?</h3>
+                    <button onclick="borrarUsuario()">Sí, borrar</button>
+                    <button onclick="cerrarModal()">Cancelar</button>
+                </div>
+            </div>
+
+        
+                <!-- Tabla de gestiones de moderadores -->
+                <section id="gestiones" class="content-section" style="display: none;">
+                    <h1>Gestiones de Moderadores</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Acción</th>
+                                <th>Moderador</th>
+                                <th>Fecha y Hora</th>
+                                <th>Docente</th>
+                                <th>Fecha Inicio Solicitud</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-gestiones">
+                            <!-- Ejemplo de acciones -->
+                            <tr>
+                                <td>Aceptar Solicitud</td>
+                                <td>Juan Pérez</td>
+                                <td>18/11/2024 14:35</td>
+                                <td>Ana López</td>
+                                <td>15/11/2024</td>
+                            </tr>
+                            <tr>
+                                <td>Rechazar Solicitud</td>
+                                <td>Ana López</td>
+                                <td>18/11/2024 10:22</td>
+                                <td>Pedro Sánchez</td>
+                                <td>14/11/2024</td>
+                            </tr>
+                            <tr>
+                                <td>Modificar Solicitud</td>
+                                <td>Pedro Sánchez</td>
+                                <td>17/11/2024 08:10</td>
+                                <td>Juan Pérez</td>
+                                <td>13/11/2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>        
+        </div>
+
+        <script>
+            function mostrarSeccion(seccionId) {
+                const secciones = document.querySelectorAll('.content-section');
+                secciones.forEach(seccion => {
+                    seccion.style.display = 'none'; // Oculta todas las secciones
+                });
+
+                const seccionSeleccionada = document.getElementById(seccionId);
+                if (seccionSeleccionada) {
+                    seccionSeleccionada.style.display = 'block'; // Muestra la sección seleccionada
+                }
+            }
+            
+            function ocultarBienvenida() {
+                const bienvenida = document.getElementById('bienvenida');
+                bienvenida.style.display = 'none'; // Oculta el div de bienvenida
+            }
+
+            function mostrarConfirmacionCorreo() {
+                    const email = document.getElementById('email').value;
+                    const confirmacionCorreo = document.getElementById('confirmacion-correo');
+                    
+                    // Mostrar el campo de confirmación solo cuando se empieza a escribir en el campo de correo
+                    if (email.length > 0) {
+                        confirmacionCorreo.style.display = 'block';
+                    } else {
+                        confirmacionCorreo.style.display = 'none';
+                    }
+                }
+            
+            function validarCorreo() {
+                const email = document.getElementById('email').value;
+                const confirmarEmail = document.getElementById('confirmar-email').value;
+                const mensajeError = document.getElementById('mensaje-error');
+                    
+                if (email !== confirmarEmail) {
+                    mensajeError.style.display = 'block';
+                } else {
+                    mensajeError.style.display = 'none';
+                }
+            }
+        
+            // Array para almacenar los usuarios registrados
+            const usuarios = [];
+        
+            function mostrarSeccion(seccionId) {
+                // Ocultar todas las secciones
+                const secciones = document.querySelectorAll('.content-section');
+                secciones.forEach(seccion => seccion.style.display = 'none');
+
+                // Mostrar la sección seleccionada
+                document.getElementById(seccionId).style.display = 'block';
+            }
+
+
+            // Función para mostrar el formulario de edición con datos del usuario
+            function editarUsuario(nombre, apellidos, correo, rol, etapasSeleccionadas) {
+                document.getElementById('editar-email').value = correo;
+                document.getElementById('editar-rol').value = rol;
+
+                // Resetear checkboxes de etapas
+                const checkboxes = document.querySelectorAll('#etapas-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+
+                // Marcar las etapas seleccionadas
+                etapasSeleccionadas.forEach(etapa => {
+                    const checkbox = document.querySelector(`#etapas-checkboxes input[value="${etapa}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+
+                // Mostrar la sección de edición
+                mostrarSeccion('editar-usuario');
+            }
+
+            // Función para guardar cambios de usuario
+            function guardarCambiosUsuario() {
+                // Obtener las etapas seleccionadas
+                const etapasSeleccionadas = Array.from(document.querySelectorAll('#etapas-checkboxes input[type="checkbox"]:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                // Enviar los datos seleccionados al backend aquí
+                alert('Cambios guardados correctamente para las etapas: ' + etapasSeleccionadas.join(', '));
+                
+                // Volver a la lista de usuarios
+                mostrarSeccion('lista-usuarios');
+            }
+
+            // Función para confirmar eliminación de usuario
+            function confirmarBorrarUsuario(nombre, apellidos, correo) {
+                // Guardar información del usuario a borrar
+                document.getElementById('modal-confirmar-borrado').style.display = 'block';
+            }
+
+            // Función para eliminar usuario
+            function borrarUsuario() {
+                alert('Usuario eliminado correctamente');
+                cerrarModal();
+                mostrarSeccion('lista-usuarios');
+            }
+
+            // Cerrar modal de confirmación
+            function cerrarModal() {
+                document.getElementById('modal-confirmar-borrado').style.display = 'none';
+            }
+
+            // Función para manejar el formulario de registro de curso
+            document.getElementById('form-curso').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const fechaInicio = document.getElementById('fechaInicio').value;
+                const fechaFin = document.getElementById('fechaFin').value;
+                const nuevoCurso = `${new Date(fechaInicio).getFullYear()}/${new Date(fechaFin).getFullYear()}`;
+
+                // Añadir el nuevo curso directamente a la tabla de historial
+                agregarCursoATabla(nuevoCurso);
+
+                // Limpiar el formulario después de enviar
+                document.getElementById('form-curso').reset();
+            });
+
+            // Función para agregar un curso directamente a la tabla
+            function agregarCursoATabla(curso) {
+                const tbody = document.querySelector('#tabla-cursos tbody');
+                const fila = document.createElement('tr');
+                fila.innerHTML = `<td>${curso}</td>`;
+                tbody.appendChild(fila); // Añadir el curso como una nueva fila en la tabla
+            }
+
+            // Datos simulados de cursos académicos
+            const cursosAcademicos = [
+                { anio: "2024/2025", activo: true },
+                { anio: "2023/2024", activo: false },
+                { anio: "2022/2023", activo: false },
+                { anio: "2021/2022", activo: false },
+            ];
+
+            function actualizarSeccionCursos() {
+                // Elementos HTML
+                const etiquetaCursoActivo = document.getElementById("curso-activo");
+                const tablaCursos = document.getElementById("tabla-cursos").querySelector("tbody");
+
+                // Limpiar tabla de historial de cursos
+                tablaCursos.innerHTML = "";
+
+                // Recorrer los cursos académicos
+                cursosAcademicos.forEach(curso => {
+                    if (curso.activo) {
+                        // Mostrar el curso activo
+                        etiquetaCursoActivo.textContent = curso.anio;
+                    } else {
+                        // Agregar el curso al historial
+                        const fila = document.createElement("tr");
+                        const celda = document.createElement("td");
+                        celda.textContent = curso.anio;
+                        fila.appendChild(celda);
+                        tablaCursos.appendChild(fila);
+                    }
+                });
+            }
+
+            // Llamar a la función para inicializar la sección
+            actualizarSeccionCursos();
+
+            // Función para mostrar la sección correspondiente
+            function mostrarSeccion(seccionId) {
+                // Ocultar todas las secciones
+                const secciones = document.querySelectorAll('.content-section');
+                secciones.forEach(seccion => seccion.style.display = 'none');
+
+                // Mostrar la sección seleccionada
+                document.getElementById(seccionId).style.display = 'block';
+            }
+        </script>   
+    </body>
+</html>
