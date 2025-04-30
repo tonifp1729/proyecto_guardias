@@ -1,4 +1,4 @@
-/* Variables de color y tamaños */
+/* VARIABLES DE COLOR Y TAMAÑO */
 :root {
     --color-primario: #2980b9;
     --color-secundario: #76a9df;
@@ -13,266 +13,9 @@
     --padding-general: 40px;
 }
 
-/* Vistas de la aplicación */
-.vista-inicial {
-    background-color: var(--color-fondo-claro);
-    padding: var(--padding-general);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 600px;
-    margin: auto;
-    border-top: 5px solid var(--color-primario)
-}
+/* PARTES PERMANENTES O RECURRENTES DE LAS VISTAS */
 
-.vista-inicial h1 {
-    color: var(--color-texto);
-    font-size: 28px;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.vista-inicial p {
-    color: var(--color-texto);
-    font-size: 16px;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.vista-inicial a {
-    color: var(--color-primario);
-    font-size: 16px;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    background-color: var(--color-fondo);
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.vista-inicial a:hover {
-    background-color: var(--color-primario);
-    color: white;
-}
-
-/* ACCIÓN EXITOSA */
-
-.aviso-correcto {
-    background-color: #28a745; /* Verde de éxito */
-    color: white;
-    padding: 20px;
-    text-align: center;
-    border-radius: 5px;
-    margin-top: 50px;
-    font-family: Arial, sans-serif;
-}
-
-.aviso-correcto h2 {
-    font-size: 24px;
-}
-
-.aviso-correcto p {
-    font-size: 16px;
-}
-
-/* Contenedor de login */
-#login {
-    background-color: var(--color-fondo-claro);
-    padding: var(--padding-general);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: var(--ancho-maximo);
-    text-align: center;
-    border-top: 5px solid var(--color-secundario); /* Borde superior en color secundario */
-}
-
-#login h1 {
-    font-size: 26px;
-    margin-bottom: 15px;
-    color: var(--color-texto);
-    font-weight: 600;
-}
-
-#mensaje {
-    font-size: 16px;
-    color: var(--color-texto);
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-/* VISTA NUEVA SOLICITUD */
-.content-section {
-    width: 80%;
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    font-size: 2rem;
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Estilos para las etiquetas */
-label {
-    font-size: 1rem;
-    color: #333;
-}
-
-/* Estilos para los inputs, select, y textarea */
-input[type="text"], input[type="email"], input[type="password"],
-input[type="date"], input[type="file"], select, textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-textarea {
-    resize: vertical;
-}
-
-/* Estilos para los botones */
-button.tamanio {
-    padding: 12px 20px;
-    font-size: 1.2rem;
-    color: white;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button.tamanio:hover {
-    background-color: #0056b3;
-}
-
-/* Estilos para los checkbox y el grupo de horas */
-#horas-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-#horas-group label {
-    font-size: 1rem;
-    color: #333;
-    display: inline-block;
-    width: calc(50% - 10px);
-}
-
-#checkbox-todo-el-dia {
-    margin-top: 15px;
-}
-
-/* Estilos para los campos de selección de archivo */
-input[type="file"] {
-    padding: 5px;
-}
-
-/* Estilos para las secciones y agrupamientos */
-#enviar-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-#horas-group, #checkbox-todo-el-dia {
-    margin-top: 20px;
-}
-
-#fecha-inicio, #fecha-fin {
-    width: 48%;
-    display: inline-block;
-}
-
-#fecha-inicio {
-    margin-right: 4%;
-}
-
-/* media */
-@media (max-width: 768px) {
-    .content-section {
-        width: 95%;
-        padding: 20px;
-    }
-
-    #fecha-inicio, #fecha-fin {
-        width: 100%;
-        display: block;
-        margin-right: 0;
-    }
-
-    #horas-group label {
-        width: 100%;
-    }
-
-    button.tamanio {
-        width: 100%;
-    }
-}
-
-/* Estilo para el formulario */
-#login form {
-    display: flex;
-    flex-direction: column; /* Orden vertical */
-    align-items: center; /* Centra el contenido */
-    gap: 15px; /* Espaciado entre campos */
-}
-
-#login label {
-    font-size: 14px;
-    color: var(--color-texto);
-    align-self: flex-start; /* Alinea las etiquetas a la izquierda */
-}
-
-#login input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--color-borde);
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: var(--color-fondo);
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-#login input:focus {
-    border-color: var(--color-secundario);
-    outline: none;
-}
-
-/* Botón de inicio de sesión */
-#login button {
-    background-color: var(--color-primario);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-    border: none;
-}
-
-#login button:hover {
-    background-color: var(--color-hover);
-}
-
-/* Estilos generales */
+/* Ajustes del body */
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--color-fondo);
@@ -282,69 +25,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-}
-
-/* Contenedor de login */
-#login {
-    background-color: var(--color-fondo-claro);
-    padding: var(--padding-general);
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    width: var(--ancho-maximo);
-    text-align: center;
-    border-top: 5px solid var(--color-primario);
-}
-
-#login h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: var(--color-texto);
-}
-
-#mensaje {
-    font-size: 14px;
-    color: var(--color-secundario);
-    margin-bottom: 20px;
-}
-
-/* Inputs y botones */
-.input-texto {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid var(--color-borde);
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: var(--color-fondo);
-    box-sizing: border-box;
-}
-
-.input-texto:focus {
-    border-color: var(--color-secundario);
-    outline: none;
-}
-
-.boton {
-    background-color: var(--color-primario);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s;
-    border: none;
-}
-
-.boton:hover {
-    background-color: var(--color-hover);
-}
-
-/* Responsivo para dispositivos pequeños */
-@media (max-width: 400px) {
-    #login {
-        width: 90%;
-    }
 }
 
 /* Sidebar */
@@ -392,94 +72,70 @@ body {
     background-color: var(--color-secundario);
 }
 
-/* Botón de cerrar sesión */
-.logout a {
-    display: block;
-    background-color: var(--color-texto);
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    padding: 10px 0;
-    margin-top: 40px;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
+/* VISTAS DE LA APLICACIÓN */
 
-.logout a:hover {
-    background-color: var(--color-hover);
-}
-
-/* Contenido principal */
-.main-content {
-    margin-left: var(--ancho-sidebar);
+/* Contenedor del login */
+#login {
+    background-color: var(--color-fondo-claro);
     padding: var(--padding-general);
-    background-color: var(--color-fondo);
-    min-height: 100vh;
-    width: calc(100% - var(--ancho-sidebar) - 20px);
-    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: var(--ancho-maximo);
+    text-align: center;
+    border-top: 5px solid var(--color-secundario); /* Borde superior en color secundario */
 }
 
-.main-content h1 {
-    font-size: 28px;
+#login h1 {
+    font-size: 26px;
+    margin-bottom: 15px;
     color: var(--color-texto);
     font-weight: 600;
-    margin-bottom: 20px;
 }
 
-/* Estilos para la tabla */
-#table-container {
-    margin-top: 20px;
-    /*display: none; */
+#mensaje {
+    font-size: 16px;
+    color: var(--color-texto);
+    margin-bottom: 25px;
+    line-height: 1.5;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+/* Vista inicial al acceder a un perfil */
+.vista-inicial {
     background-color: var(--color-fondo-claro);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: var(--padding-general);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+    border-top: 5px solid var(--color-primario)
 }
 
-th, td {
-    border: 1px solid var(--color-borde);
-    padding: 12px;
-    text-align: left;
+.vista-inicial h1 {
+    color: var(--color-texto);
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 600;
 }
 
-th {
+.vista-inicial p {
+    color: var(--color-texto);
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.vista-inicial a {
+    color: var(--color-primario);
+    font-size: 16px;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: var(--color-fondo);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.vista-inicial a:hover {
     background-color: var(--color-primario);
     color: white;
-}
-
-tr:nth-child(even) {
-    background-color: var(--color-fondo);
-}
-
-/* Indicadores de estado */
-.semáforo {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.rojo {
-    background-color: red;
-}
-
-.verde {
-    background-color: green;
-}
-
-.amarillo {
-    background-color: rgb(241, 192, 16);
-}
-
-/* Mensaje de error */
-.mensaje-error {
-    color: var(--color-error);
-    font-size: 0.9em;
-    margin-top: 5px;
-    margin-bottom: 0;
 }
