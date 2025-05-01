@@ -18,14 +18,15 @@
         <div class="sidebar">
             <h2>Menú Administrador</h2>
             <ul>
-                <li><a href="#" onclick="mostrarSeccion('alta-usuarios'); ocultarBienvenida();">Alta de Usuarios</a></li>
-                <li><a href="#" onclick="mostrarSeccion('lista-usuarios'); ocultarBienvenida();">Lista de Usuarios</a></li>
-                <li><a href="#" onclick="mostrarSeccion('alta-curso'); ocultarBienvenida();">Alta de Curso Académico</a></li>
-                <li><a href="#" onclick="mostrarSeccion('listar-cursos'); ocultarBienvenida();">Lista de Cursos Académicos</a></li>
-                <li><a href="#" onclick="mostrarSeccion('gestionar-solicitudes'); ocultarBienvenida();">Gestión de Solicitudes</a></li>
-                <li><a href="#" onclick="mostrarSeccion('gestiones'); ocultarBienvenida();">Gestiones de Moderadores</a></li>
-                <li><a href="#" onclick="mostrarSeccion('comprobar-estadisticas'); ocultarBienvenida();">Comprobar Estadísticas</a></li>
+                <li><a href="#">Listado de cursos</a></li>
+                <li><a href="#">Solicitudes actuales</a></li>
             </ul>
         </div>
+        <!-- VISTA INICIAL AL HABER INICIADO SESIÓN -->
+        <div class="vista-inicial">
+            <h1>¡Bienvenido al gestor de ausencias!</h1>
+            <p>Este es tu panel de control. A tu izquierda puedes ver las opciones disponibles para ti.</p>
+        </div>
+        <!-- VISTAS DE ADMINISTRADOR: ALTA DE CURSO, LISTAR CURSOS, LISTADO DE SOLICITUDES DE UN CURSO, SIN CURSO EXISTENTE, MODIFICAR CURSO, LISTADO SOLICITUDES DEL CURSO -->
     </body>
 </html>

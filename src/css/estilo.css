@@ -29,7 +29,8 @@ body {
 
 /* Sidebar */
 .sidebar {
-    display: block;
+    /* display: block; */
+    display: none;
     width: var(--ancho-sidebar);
     height: 100vh;
     background-color: var(--color-primario);
@@ -101,6 +102,7 @@ body {
 
 /* Vista inicial al acceder a un perfil */
 .vista-inicial {
+    display: none;
     background-color: var(--color-fondo-claro);
     padding: var(--padding-general);
     border-radius: 10px;

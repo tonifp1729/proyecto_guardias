@@ -1,4 +1,0 @@
-"vendor" es el nombre que, por convención, se adopta para las carpetas que guardarán
-las distintas librerías externas que pueda llegar a tener la aplicación que estamos desarrollando.
-
-En nuestro caso vamos a tener aquí la API de Google que necesitamos, el PHP Client.
