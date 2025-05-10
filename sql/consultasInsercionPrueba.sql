@@ -1,7 +1,7 @@
-INSERT INTO Roles (idRol, nombreRol, descripcion) VALUES
+INSERT INTO Rol (id, nombre, descripcion) VALUES
 ('A', 'Administrador', 'Usuario con privilegios administrativos'),
 ('M', 'Moderador', 'Usuario con privilegios de moderación'),
-('U', 'Usuario', 'Usuario común del sistema');
+('C', 'Usuario', 'Usuario común del sistema');
 
 INSERT INTO Motivos (nombreMotivo, descripcion) VALUES
 ('enfermedad', 'Ausencia por enfermedad o baja médica'),
