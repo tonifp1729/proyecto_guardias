@@ -1,6 +1,6 @@
 <!-- VISTA DEL FORMULARIO PARA INICIAR UN NUEVO CURSO --------------------------------------------------------------------------------->
 <?php
-    if (!defined('ACCESO_PERMITIDO')) {
+    if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         header('Location: ../../index.php?accion=inicio');
         exit;
     }

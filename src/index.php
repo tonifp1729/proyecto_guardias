@@ -19,15 +19,27 @@
 
         case 'loginGoogle':
             $vista = Usuario_controlador::inicioSesionGoogle();
-            if ($vista) {
-                $controlador->cargarVista($vista);
+            $controlador->cargarVista($vista);
+
+            break;
+
+        case 'cursoActual':
+            $vista = 'cursoactual';
+
+            break;
+
+        case 'logout':
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
             }
+            
+            session_unset();
+            session_destroy();
+            
+            $vista = 'inicio';
+            $controlador->cargarVista($vista);
 
             break;
-
-        case '':
-            break;
-
         default:
             echo "No te portes mal. Accede por medio del inicio de sesión y no trates de juguetear con la URL.";
             break;

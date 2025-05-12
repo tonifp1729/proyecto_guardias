@@ -1,6 +1,6 @@
 <!-- SIDEBAR ------------------------------------------------------------------------------------------------->
 <?php
-    if (!defined('ACCESO_PERMITIDO')) {
+    if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         header('Location: ../../../index.php?accion=inicio');
         exit;
     }
@@ -12,19 +12,15 @@
         <?php
             if (isset($_SESSION['rol'])) {
                 switch ($_SESSION['rol']) {
-                    case 'C': // USUARIO COMÚN
+                    case 'A': //USUARIO COMÚN ---------------- LOS CASE HAN CAMBIADO POR EL MOMENTO PARA PODER REALIZAR LAS PARTES FALTANTES
                         echo '<li><a a href="#">Solicitudes presentadas</a></li>';
                         echo '<li><a a href="#">Nueva solicitud</a></li>';
                         break;
-                    case 'A': // USUARIO ADMINISTRADOR
+                    case 'C': //USUARIO ADMINISTRADOR
+                        echo '<li><a href="index.php?accion=cursoActual">Curso actual</a></li>';
                         echo '<li><a href="#">Listado de profesores</a></li>';
-                        echo '<li><a href="#">Curso actual</a></li>';
-                        if (isset($_SESSION['cursoActivo'])) {
-                            echo '<li><a href="#">Ver mis solicitudes</a></li>';
-                            echo '<li><a href="#">Hacer solicitud</a></li>';
-                        }
                         break;
-                    case 'M': // USUARIO MODERADOR
+                    case 'M': //USUARIO MODERADOR
                         echo '<li><a href="#">Moderar solicitudes</a></li>';
                         echo '<li><a href="#">Historial de moderación</a></li>';
                         break;
@@ -33,6 +29,6 @@
         ?>
     </ul>
     <div class="logout">
-        <a>Cerrar Sesión</a>
+        <a href="index.php?accion=logout">Cerrar Sesión</a>
     </div>
 </div>

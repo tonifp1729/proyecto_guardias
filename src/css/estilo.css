@@ -58,6 +58,24 @@ body {
     margin-bottom: 15px;
 }
 
+/* Botón de cerrar sesión */
+.logout a {
+    display: block;
+    background-color: var(--color-texto);
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 40px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.logout a:hover {
+    background-color: var(--color-hover);
+}
+
 .sidebar ul li a {
     color: var(--color-fondo);
     text-decoration: none;

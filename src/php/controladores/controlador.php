@@ -6,7 +6,9 @@
         
         public static function cargarVista($vista, $datos = []) {
             
-            session_start();
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
 
             //Si no ha pasado por la autenticación y la vista no es "inicio" se forzará la redirección a la vista inicio. Así evitamos que acceda por medio del uso de un parámetro por URL
             if (!isset($_SESSION['rol']) && $vista !== 'inicio') {

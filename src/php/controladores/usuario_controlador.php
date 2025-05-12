@@ -6,6 +6,10 @@
     class Usuario_controlador {
 
         public static function inicioSesionGoogle() {
+            
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
 
             require_once RUTA_VENDOR_AUTOLOAD;
 
@@ -28,13 +32,6 @@
 
                 //El usuario ha vuelto desde Google con el código de autorización
                 $token = $cliente->fetchAccessTokenWithAuthCode($_GET['code']);
-                
-                //ARREGLANDO ERROR AQUI
-                if (!$token || isset($token['error'])) {
-                    echo "Error al obtener el token de acceso:<br>";
-                    var_dump($token);
-                    exit;
-                }
 
                 $cliente->setAccessToken($token);
 

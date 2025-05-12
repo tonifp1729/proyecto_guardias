@@ -16,7 +16,7 @@
         *  @param int $idCurso - ID del curso.
         **/
         public function mostrarCurso($idCurso) {
-            $SQL = "SELECT * FROM Cursos WHERE idCurso = ?";
+            $SQL = "SELECT * FROM Curso WHERE id = ?";
             $consulta = $this->conexion->prepare($SQL);
             $consulta->bind_param("i", $idCurso);
             $consulta->execute();
@@ -31,11 +31,11 @@
         /*
         *  Inserta un nuevo curso en la tabla Cursos.
         **/
-        public function insertarCurso($anoAcademico, $fechaInicio, $fechaFinalizacion) {
-            $SQL = "INSERT INTO Cursos (anoAcademico, fechaInicio, fechaFinalizacion) VALUES (?, ?, ?)";
+        public function insertarCurso($fechaInicio, $fechaFinalizacion, $anoAcademico) {
+            $SQL = "INSERT INTO Curso (fecha_inicio, fecha_fin, anio_academico) VALUES (?, ?, ?)";
             
             $consulta = $this->conexion->prepare($SQL);
-            $consulta->bind_param("sss", $anoAcademico, $fechaInicio, $fechaFinalizacion);
+            $consulta->bind_param("sss", $fechaInicio, $fechaFinalizacion, $anoAcademico);
             $consulta->execute();
             $consulta->close();
         }        
@@ -45,19 +45,19 @@
         * Retorna el año académico del curso activo o `null` si no hay un curso activo.
         */
         public function cursoActivo() {
-            $SQL = "SELECT idCurso, anoAcademico, fechaInicio, fechaFinalizacion FROM Cursos WHERE CURDATE() BETWEEN fechaInicio AND fechaFinalizacion LIMIT 1";
+            $SQL = "SELECT id, fecha_inicio, fecha_fin, anio_academico FROM Curso WHERE CURDATE() BETWEEN fecha_inicio AND fecha_fin LIMIT 1";
         
             $consulta = $this->conexion->prepare($SQL);
             $consulta->execute();
 
             $curso = null;
-            $consulta->bind_result($idCurso, $anoAcademico, $fechaInicio, $fechaFinalizacion);
+            $consulta->bind_result($idCurso, $fechaInicio, $fechaFinalizacion, $anoAcademico);
             if ($consulta->fetch()) {
                 $curso = [
                     'idCurso' => $idCurso,
-                    'anoAcademico' => $anoAcademico,
                     'fechaInicio' => $fechaInicio,
-                    'fechaFinalizacion' => $fechaFinalizacion
+                    'fechaFinalizacion' => $fechaFinalizacion,
+                    'anoAcademico' => $anoAcademico
                 ];
             }
             $consulta->close();
