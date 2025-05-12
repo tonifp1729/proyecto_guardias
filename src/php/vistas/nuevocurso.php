@@ -1,4 +1,10 @@
 <!-- VISTA DEL FORMULARIO PARA INICIAR UN NUEVO CURSO --------------------------------------------------------------------------------->
+<?php
+    if (!defined('ACCESO_PERMITIDO')) {
+        header('Location: ../../index.php?accion=inicio');
+        exit;
+    }
+?>
 <div class="container">
     <h1>Iniciar Nuevo Curso</h1>
     <form action="index.php?controlador=Course&action=iniciarCurso" method="POST">

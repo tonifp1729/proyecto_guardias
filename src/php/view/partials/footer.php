@@ -1,3 +1,0 @@
-    </body>
-    <!-- Mi firma -->
-</html>

@@ -1,4 +1,10 @@
 <!-- VISTA CURSO ACTUAL --------------------------------------------------------------------------------->
+<?php
+    if (!defined('ACCESO_PERMITIDO')) {
+        header('Location: ../../index.php?accion=inicio');
+        exit;
+    }
+?>
 <div class="container">
     <h1>Curso actual</h1>
     <div class="curso-info">
