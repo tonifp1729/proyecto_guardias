@@ -6,7 +6,7 @@
     class Usuario_controlador {
 
         public static function inicioSesionGoogle() {
-            
+
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
@@ -22,8 +22,11 @@
 
             if (!isset($_GET['code'])) {
 
-                //Redirigimos al usuario a la pantalla de login de Google al no otorgar su autorización
+
+                //Generamos la URL de autenticación de Google, forzando con el promt la selección de cuenta en todo momento (de lo contrario, una vez se ha autenticado el usuario, la salta siempre)
+                $cliente->setPrompt('select_account');
                 $authUrl = $cliente->createAuthUrl();
+                //Redirigimos a la ventana de inicio de sesión de Google con una URL sanitizada
                 header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
                 
                 exit;
@@ -42,7 +45,7 @@
                 $nombre = $perfil->givenName;
                 $apellidos = $perfil->familyName;
 
-                //Ahora verificas si ya existe en la base de datos y lo insertas si no está
+                //Verificamos existe en la base de datos y lo insertamos si no está
                 $modeloUsuario = new Usuario();
 
                 if (!$modeloUsuario->correoRegistrado($correo)) {
