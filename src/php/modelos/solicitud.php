@@ -1,7 +1,7 @@
 <?php
     require_once 'db.php';
 
-    class Solicitudes {
+    class Solicitud {
         private $conexion;
 
         public function __construct() {

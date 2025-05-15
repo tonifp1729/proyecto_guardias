@@ -17,8 +17,9 @@
                         echo '<li><a a href="#">Nueva solicitud</a></li>';
                         break;
                     case 'C': //USUARIO ADMINISTRADOR
-                        echo '<li><a href="index.php?accion=cursoActual">Curso actual</a></li>';
-                        echo '<li><a href="#">Listado de profesores</a></li>';
+                        echo '<li><a href="index.php?accion=listadoCursos">Cursos</a></li>';
+                        echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';
+                        echo '<li><a href="index.php?accion=nuevoCurso">Iniciar nuevo curso</a></li>';
                         break;
                     case 'M': //USUARIO MODERADOR
                         echo '<li><a href="#">Moderar solicitudes</a></li>';

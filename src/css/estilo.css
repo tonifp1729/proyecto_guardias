@@ -58,6 +58,20 @@ body {
     margin-bottom: 15px;
 }
 
+.sidebar ul li a {
+    color: var(--color-fondo);
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    background-color: var(--color-secundario);
+}
+
 /* Botón de cerrar sesión */
 .logout a {
     display: block;
@@ -76,18 +90,63 @@ body {
     background-color: var(--color-hover);
 }
 
-.sidebar ul li a {
-    color: var(--color-fondo);
-    text-decoration: none;
-    font-size: 16px;
-    display: block;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+/* Formularios */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el contenido */
+    gap: 15px; /* Espacia entre campos */
 }
 
-.sidebar ul li a:hover {
+form label {
+    font-size: 14px;
+    color: var(--color-texto);
+    align-self: flex-start; /* Alineamos las etiquetas a la izquierda */
+}
+
+form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-borde);
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: var(--color-fondo);
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+form input:focus {
+    border-color: var(--color-secundario);
+    outline: none;
+}
+
+/* Botón de formularios */
+form button[type="submit"] {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--color-borde);;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form button[type="submit"]:hover {
     background-color: var(--color-secundario);
+    transform: scale(1.02);
+}
+
+form button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+form button[type="submit"]:disabled {
+    background-color: #8f8a8a;
+    cursor: not-allowed;
 }
 
 /* VISTAS DE LA APLICACIÓN */
@@ -157,4 +216,32 @@ body {
 .vista-inicial a:hover {
     background-color: var(--color-primario);
     color: white;
+}
+
+/* Vista cursoactual */
+.curso-info {
+    background-color: #f0f8ff;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Vista de aviso para las acciones realizadas correctamente */
+.aviso-correcto {
+    background-color: var(--color-hover);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 50px;
+    font-family: Arial, sans-serif;
+}
+
+.aviso-correcto h2 {
+    font-size: 24px;
+}
+
+.aviso-correcto p {
+    font-size: 16px;
 }

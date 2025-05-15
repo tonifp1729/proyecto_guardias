@@ -2,6 +2,7 @@
 
     require_once 'php/controladores/controlador.php';
     require_once 'php/controladores/usuario_controlador.php';
+    require_once 'php/controladores/curso_controlador.php';
 
     //Definimos esta constante en el index, ya que al cargar cada vista se realiza una comprobación sobre esta. En caso de que no se pase por el index se lanza una redirección hacia el inicio.
     DEFINE('ACCESO_PERMITIDO', true);
@@ -24,8 +25,9 @@
             break;
 
         case 'cursoActual':
-            $vista = 'cursoactual';
-
+            $cursoControlador = new Curso_controlador();
+            $datos = $cursoControlador->mostrarCursoActual();
+            $controlador->cargarVista($datos['accion'], $datos);
             break;
 
         case 'logout':
@@ -40,6 +42,30 @@
             $controlador->cargarVista($vista);
 
             break;
+
+        case 'nuevoCurso':
+
+            $vista = 'formnuevocurso';
+            $controlador->cargarVista($vista);
+
+            break;
+
+        case 'iniciarCurso':
+            $cursoControlador = new Curso_controlador();
+            $vista = $cursoControlador->iniciarCurso();
+            $controlador->cargarVista($vista);
+            break;
+
+        case '':
+            break;
+                        
+        case 'exito':
+
+            $vista = 'avisoexito';
+            $controlador->cargarVista($vista);
+
+            break;
+        
         default:
             echo "No te portes mal. Accede por medio del inicio de sesión y no trates de juguetear con la URL.";
             break;
