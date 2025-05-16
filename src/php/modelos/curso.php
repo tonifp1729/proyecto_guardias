@@ -11,43 +11,46 @@
             $this->conexion = $db->conexion;
         }
 
-        /*
-        *  Devuelve la información de un curso específico basado en su ID.
-        *  @param int $idCurso - ID del curso.
-        **/
-        public function mostrarCurso($idCurso) {
-            $SQL = "SELECT * FROM Curso WHERE id = ?";
-            $consulta = $this->conexion->prepare($SQL);
-            $consulta->bind_param("i", $idCurso);
-            $consulta->execute();
-            $resultado = $consulta->get_result();
+        /**
+         * Busca un curso pendiente (estado 'P') cuya fecha de inicio y fin abarquen la fecha proporcionada.
+         * Este método se utiliza para verificar si existe un curso en estado pendiente que deba activarse,
+         * considerando que la fecha actual esté dentro del rango de duración del curso.
+         * @param string - $fecha Fecha en formato 'Y-m-d' que se compara con las fechas de inicio y fin del curso.
+         * @return int|null - Devuelve el ID del curso si se encuentra uno coincidente, o null si no existe.
+         */
+        public function buscarCursoPendiente($fecha) {
+            $sql = "SELECT id FROM Curso WHERE estado = 'P' AND ? BETWEEN fecha_inicio AND fecha_fin";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bind_param("s", $fecha);
+            $stmt->execute();
+            $stmt->bind_result($idCurso);
+            $stmt->fetch();
+            $stmt->close();
 
-            $curso = $resultado->fetch_assoc();
-
-            $consulta->close();
-            return $curso;
+            return $idCurso ?: null;
         }
 
-        /*
-        *  Inserta un nuevo curso en la tabla Cursos.
-        **/
-        public function insertarCurso($fechaInicio, $fechaFin, $anoAcademico) {
-            $SQL = "INSERT INTO Curso (fecha_inicio, fecha_fin, anio_academico) VALUES (?, ?, ?)";
+
+
+        /**
+         * Hace el alta de un nuevo curso.
+         */
+        public function insertarCurso($fechaInicio, $fechaFin, $anoAcademico, $estado) {
+            $SQL = "INSERT INTO Curso (fecha_inicio, fecha_fin, anio_academico, estado) VALUES (?, ?, ?, ?)";
             
             $consulta = $this->conexion->prepare($SQL);
-            $consulta->bind_param("sss", $fechaInicio, $fechaFin, $anoAcademico);
+            $consulta->bind_param("ssss", $fechaInicio, $fechaFin, $anoAcademico, $estado);
             $consulta->execute();
             $consulta->close();
         }
 
         /**
-         * Comprueba si hay un curso actualmente activo basado en las fechas de inicio y finalización y lo devuelve.
-         * Retorna el año académico del curso activo o `null` si no hay un curso activo.
-         * @return array|null - Array asociativo con los datos del curso que está activo actualmente.
+         * Devolverá los datos del curso activo (estado = 'A') en caso de que este exista, de lo contrario devuelve un nulo.
+         * @return array|null - Array asociativo con los datos del curso o null.
          */
         public function cursoActivo() {
-            $SQL = "SELECT id, fecha_inicio, fecha_fin, anio_academico FROM Curso WHERE CURDATE() BETWEEN fecha_inicio AND fecha_fin LIMIT 1";
-        
+            $SQL = "SELECT id, fecha_inicio, fecha_fin, anio_academico FROM Curso WHERE estado = 'A' LIMIT 1";
+
             $consulta = $this->conexion->prepare($SQL);
             $consulta->execute();
 
@@ -62,8 +65,48 @@
                 ];
             }
             $consulta->close();
-        
+
             return $curso;
+        }
+
+        /**
+         * Devuelve el ID del curso activo si este existe o un nulo en caso de que no.
+         * @return id|null - ID curso con estado 'A'.
+         */
+        public function hayCursoActivo() {
+            $SQL = "SELECT id FROM Curso WHERE estado = 'A' LIMIT 1";
+            $consulta = $this->conexion->prepare($SQL);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+
+            $idCurso = null;
+            if ($fila = $resultado->fetch_assoc()) {
+                $idCurso = $fila['id'];
+            }
+
+            $consulta->close();
+            return $idCurso;
+        }
+
+        /**
+         * Cambia el estado de los cursos activos ('A') a finalizados ('F') si su fecha_fin ya pasó.
+         */
+        public function finalizarCursos() {
+            $SQL = "UPDATE Curso SET estado = 'F' WHERE estado = 'A' AND fecha_fin < CURDATE()";
+            $this->conexion->query($SQL);
+        }
+
+        /**
+         * Actualiza el estado del curso a activo ('A').
+         * @param idCurso - ID del curso que va a ser activado.
+         */
+        public function activarCurso($idCurso) {
+            $sql = "UPDATE Curso SET estado = 'A' WHERE id = ?";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idCurso);
+            $consulta->execute();
+            $consulta->close();
         }
 
         /**

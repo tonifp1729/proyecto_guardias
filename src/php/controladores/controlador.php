@@ -23,6 +23,9 @@
 
             //La sidebar se carga en caso de que se haya accedido a una vista que la requiera
             if ($vista !== 'inicio') {
+                require_once RUTA_CONTROLADORES.'curso_controlador.php';
+                $controladorCurso = new Curso_controlador();
+                $controladorCurso->verificarActivacionCurso();
                 require_once RUTA_VISTAS . 'partes/sidebar.php';
             }
 

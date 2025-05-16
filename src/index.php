@@ -56,7 +56,8 @@
             $controlador->cargarVista($vista);
             break;
 
-        case '':
+        case 'listadoCursos':
+            
             break;
                         
         case 'exito':

@@ -13,6 +13,30 @@
         }
 
         /**
+         * Este método se lanza en el momento en el que se carga la sidebar, asegurandonos de que siempre que acceda un usuario 
+         * la aplicación se mantiene actualizada con el último curso activo.
+         * 1. Finaliza los cursos obsoletos (si los hay).
+         * 2. Comprobamos que no hay curso activo y, si no lo hay, buscamos los que puedan estar pendientes.
+         * 3. Activa el curso que estaba pendiente de iniciarse.
+         */
+        public function verificarActivacionCurso() {
+
+            $this->curso->finalizarCursos();
+
+            $cursoActivo = $this->curso->cursoActivo();
+
+            if (!$cursoActivo) {
+                
+                $hoy = date('Y-m-d');
+                $cursoPendiente = $this->curso->buscarCursoPendiente($hoy);
+
+                if ($cursoPendiente) {
+                    $this->curso->activarCurso($cursoPendiente);
+                }
+            }
+        }
+
+        /**
          * Controlador para iniciar un nuevo curso académico.
          * Este método se encarga de gestionar la creación de un nuevo curso,
          * validando los siguientes aspectos:
@@ -28,7 +52,7 @@
                 $anoAcademico = null;
                 $fechaInicio = $_POST['fecha_inicio'];
                 $fechaFinalizacion = $_POST['fecha_fin'];
-                
+
                 //Comprobamos si existe solapamiento de fechas con los cursos anteriores, si la hay volvemos a la pantalla de formulario
                 if ($this->curso->existeCoincidencia($fechaInicio, $fechaFinalizacion)) {
                     return 'formnuevocurso';
@@ -55,8 +79,13 @@
                 $anoAcademico = $anoInicio.'/'.$anoFin;
 
                 if (!empty($fechaInicio) && !empty($fechaFinalizacion)) {
-                    $this->curso->insertarCurso($fechaInicio, $fechaFinalizacion, $anoAcademico);
+
+                    $cursoActivoExiste = $this->curso->hayCursoActivo();
+                    $estado = (!$cursoActivoExiste && $fechaInicio === $hoy) ? 'A' : 'P';
+                    $this->curso->insertarCurso($fechaInicio, $fechaFinalizacion, $anoAcademico, $estado);
+
                     return 'avisoexito';
+
                 } else {
                     return 'formnuevocurso';
                 }

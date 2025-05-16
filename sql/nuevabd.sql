@@ -28,7 +28,9 @@ CREATE TABLE Curso (
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     anio_academico CHAR(5) NOT NULL,
-    PRIMARY KEY (id)
+    estado CHAR(1) NOT NULL DEFAULT 'P',
+    PRIMARY KEY (id),
+    CONSTRAINT chk_estado_curso CHECK (estado IN ('A', 'P', 'F'));
 );
 
 CREATE TABLE Solicitud (
