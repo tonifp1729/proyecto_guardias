@@ -30,8 +30,6 @@
             return $idCurso ?: null;
         }
 
-
-
         /**
          * Hace el alta de un nuevo curso.
          */
@@ -128,6 +126,22 @@
             $consulta->close();
 
             return $count > 0;
+        }
+
+        public function listarCursos() {
+            $sql = "SELECT id, anio_academico, fecha_inicio, fecha_fin, estado FROM Curso";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+
+            $cursos = [];
+
+            while ($fila = $resultado->fetch_assoc()) {
+                $cursos[] = $fila;
+            }
+
+            return $cursos;
         }
 
     }

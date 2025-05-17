@@ -12,14 +12,14 @@
         <?php
             if (isset($_SESSION['rol'])) {
                 switch ($_SESSION['rol']) {
-                    case 'A': //USUARIO COMÚN ---------------- LOS CASE HAN CAMBIADO POR EL MOMENTO PARA PODER REALIZAR LAS PARTES FALTANTES
+                    case 'C': //USUARIO COMÚN
                         echo '<li><a a href="#">Solicitudes presentadas</a></li>';
                         echo '<li><a a href="#">Nueva solicitud</a></li>';
                         break;
-                    case 'C': //USUARIO ADMINISTRADOR
-                        echo '<li><a href="index.php?accion=listadoCursos">Cursos</a></li>';
+                    case 'A': //USUARIO ADMINISTRADOR
                         echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';
                         echo '<li><a href="index.php?accion=nuevoCurso">Iniciar nuevo curso</a></li>';
+                        echo '<li><a href="index.php?accion=listadoCursos">Registro de cursos</a></li>';
                         break;
                     case 'M': //USUARIO MODERADOR
                         echo '<li><a href="#">Moderar solicitudes</a></li>';

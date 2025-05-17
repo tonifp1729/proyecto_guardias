@@ -95,26 +95,43 @@
             return 'formnuevocurso';
         }
 
-        public function listarCursos() {
-            $cursos = $this->curso->obtenerTodos();
-            return $cursos;
-        }
+        /**
+         * Obtiene todos los cursos desde el modelo y los ordena para su presentación en la vista.
+         * 
+         * Los cursos se ordenan primero por estado con el siguiente orden de prioridad:
+         * - 'A' (Activo)
+         * - 'P' (Pendiente)
+         * - 'F' (Finalizado)
+         * 
+         * Dentro de cada grupo de estado, se ordenan por año académico de forma descendente
+         * (por ejemplo, '24-25' aparece antes que '23-24').
+         * 
+         * Este método es invocado por el enrutador principal (index.php) al acceder a la acción 'listadoCursos'.
+         * 
+         * @return array - Retorna un array asociativo con: 'accion' (el nombre de la vista a cargar) | 'cursos' (el array de cursos ya ordenado)
+         */
+        public function obtenerCursos() {
+            $cursos = $this->curso->listarCursos();
 
-        public function mostrarCursoActual() {
-            $cursoActivo = $this->curso->cursoActivo();
+            //Ordenamos los cursos por estado y año académico, utilizamos esta función que nos permite establecer el orden del array de manera personalizada
+            usort($cursos, function ($a, $b) {
 
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
+                //Definimos el orden de prioridad de los estados
+                $ordenEstado = ['A' => 1, 'P' => 2, 'F' => 3];
 
-            $listadoSolicitudes = [];
+                //Establecemos el valor númerico de los estados de los cursos que se comparan (2 a 2)
+                $estadoA = $ordenEstado[$a['estado']] ?? 4;
+                $estadoB = $ordenEstado[$b['estado']] ?? 4;
 
-            if ($cursoActivo) {
-                $idCurso = $cursoActivo['idCurso'];
-                $listadoSolicitudes = $this->solicitud->obtenerPorCurso($idCurso);
-            }
+                if ($estadoA === $estadoB) {
+                    //Comparamos por año académico para disponerlos en orden decreciente
+                    return strcmp($b['anio_academico'], $a['anio_academico']);
+                }
 
-            return ['cursoActivo' => $cursoActivo,'solicitudes' => $listadoSolicitudes,'accion' => 'cursoActual'];
+                return $estadoA - $estadoB;
+            });
+
+            return ['accion' => 'listarcursos', 'cursos' => $cursos];
         }
 
     }

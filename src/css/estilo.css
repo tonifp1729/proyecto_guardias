@@ -245,3 +245,80 @@ form button[type="submit"]:disabled {
 .aviso-correcto p {
     font-size: 16px;
 }
+
+/* Vista del listado de cursos */
+#listado-cursos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: var(--padding-general);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#listado-cursos > div {
+    background-color: var(--color-fondo-claro);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 220px;
+    transition: transform 0.3s ease;
+}
+
+#listado-cursos > div:hover {
+    transform: scale(1.02);
+}
+
+/* Encabezado de cada curso */
+#listado-cursos h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+/* Fechas */
+#listado-cursos p {
+    margin: 5px 0;
+    color: var(--color-texto);
+    font-size: 14px;
+}
+
+/* Botones dentro de los cursos */
+#listado-cursos a {
+    display: inline-block;
+    margin: 8px 10px 0 0;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background-color: var(--color-primario);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#listado-cursos a:hover {
+    background-color: var(--color-hover);
+    transform: scale(1.03);
+}
+
+/* Colores de los estados del curso */
+.activo {
+    background-color: rgba(0, 123, 255, 0.1); /* Azul claro */
+    border-left: 5px solid #007BFF;
+}
+
+.pendiente {
+    background-color: rgba(255, 193, 7, 0.15); /* Amarillo claro */
+    border-left: 5px solid #FFC107;
+}
+
+.finalizado {
+    background-color: rgba(220, 53, 69, 0.1); /* Rojo claro */
+    border-left: 5px solid #DC3545;
+}

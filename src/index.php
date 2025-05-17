@@ -19,15 +19,18 @@
             break;
 
         case 'loginGoogle':
+
             $vista = Usuario_controlador::inicioSesionGoogle();
             $controlador->cargarVista($vista);
 
             break;
 
         case 'cursoActual':
+
             $cursoControlador = new Curso_controlador();
             $datos = $cursoControlador->mostrarCursoActual();
             $controlador->cargarVista($datos['accion'], $datos);
+
             break;
 
         case 'logout':
@@ -51,15 +54,21 @@
             break;
 
         case 'iniciarCurso':
+
             $cursoControlador = new Curso_controlador();
             $vista = $cursoControlador->iniciarCurso();
             $controlador->cargarVista($vista);
+
             break;
 
         case 'listadoCursos':
-            
+
+            $cursoControlador = new Curso_controlador();
+            $datos = $cursoControlador->obtenerCursos();
+            $controlador->cargarVista($datos['accion'], $datos);
+
             break;
-                        
+
         case 'exito':
 
             $vista = 'avisoexito';
