@@ -96,18 +96,14 @@
         }
 
         /**
-         * Obtiene todos los cursos desde el modelo y los ordena para su presentación en la vista.
-         * 
+         * Obtiene todos los cursos y los ordena para su presentación en la vista.
          * Los cursos se ordenan primero por estado con el siguiente orden de prioridad:
          * - 'A' (Activo)
          * - 'P' (Pendiente)
          * - 'F' (Finalizado)
          * 
-         * Dentro de cada grupo de estado, se ordenan por año académico de forma descendente
+         * Dentro de cada grupo de estado, los cursos, son ordenanos por año académico de forma descendente
          * (por ejemplo, '24-25' aparece antes que '23-24').
-         * 
-         * Este método es invocado por el enrutador principal (index.php) al acceder a la acción 'listadoCursos'.
-         * 
          * @return array - Retorna un array asociativo con: 'accion' (el nombre de la vista a cargar) | 'cursos' (el array de cursos ya ordenado)
          */
         public function obtenerCursos() {
@@ -132,6 +128,20 @@
             });
 
             return ['accion' => 'listarcursos', 'cursos' => $cursos];
+        }
+
+        public function borrarCurso() {
+            $idCurso = $_GET['id'];
+
+            $prepararCurso = $this->curso->obtenerCurso($idCurso);
+
+            if ($prepararCurso['estado'] === 'A') {
+                return 'listadoCursos';
+            }
+
+            $this->curso->eliminarCurso($idCurso);
+
+            return 'avisoexito';
         }
 
     }

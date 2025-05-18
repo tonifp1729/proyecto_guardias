@@ -69,6 +69,14 @@
 
             break;
 
+        case 'borrarCurso':
+
+            $cursoControlador = new Curso_controlador();
+            $vista = $cursoControlador->borrarCurso();
+            $controlador->cargarVista($vista);
+
+            break;
+
         case 'exito':
 
             $vista = 'avisoexito';

@@ -68,6 +68,34 @@
         }
 
         /**
+         * Devolverá los datos del curso según la id del curso.
+         * @param idcurso - id de Curso del curso que se requiere.
+         * @return array|null - Array asociativo con los datos del curso o null.
+         */
+        public function obtenerCurso($idCurso) {
+            $sql = "SELECT * FROM Curso WHERE id = ?";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idCurso);
+            $consulta->execute();
+
+            $curso = null;
+            $consulta->bind_result($idCurso, $fechaInicio, $fechaFinalizacion, $anoAcademico, $estado);
+            if ($consulta->fetch()) {
+                $curso = [
+                    'idCurso' => $idCurso,
+                    'fechaInicio' => $fechaInicio,
+                    'fechaFinalizacion' => $fechaFinalizacion,
+                    'anoAcademico' => $anoAcademico,
+                    'estado' => $estado
+                ];
+            }
+            $consulta->close();
+
+            return $curso;
+        }
+
+        /**
          * Devuelve el ID del curso activo si este existe o un nulo en caso de que no.
          * @return id|null - ID curso con estado 'A'.
          */
@@ -142,6 +170,24 @@
             }
 
             return $cursos;
+        }
+
+        public function eliminarCurso($idCurso) {
+            $sql = "DELETE FROM Curso WHERE id = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idCurso);
+            $consulta->execute();
+
+            return $consulta->affected_rows > 0;
+        }
+
+        public function modificarCurso($idCurso, $fechaInicio, $fechaFin, $anioAcademico, $estado) {
+            $sql = "UPDATE Curso SET fecha_inicio = ?, fecha_fin = ?, anio_academico = ?, estado = ? WHERE id = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("ssssi", $fechaInicio, $fechaFin, $anioAcademico, $estado, $idCurso);
+            $consulta->execute();
+
+            return $consulta->affected_rows > 0;
         }
 
     }
