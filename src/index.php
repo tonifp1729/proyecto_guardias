@@ -65,7 +65,7 @@
 
             $cursoControlador = new Curso_controlador();
             $datos = $cursoControlador->obtenerCursos();
-            $controlador->cargarVista($datos['accion'], $datos);
+            $controlador->cargarVista($datos['vista'], $datos);
 
             break;
 
@@ -74,6 +74,28 @@
             $cursoControlador = new Curso_controlador();
             $vista = $cursoControlador->borrarCurso();
             $controlador->cargarVista($vista);
+
+            break;
+
+        case 'irModificarCurso':
+
+            $cursoControlador = new Curso_controlador();
+            $datos = $cursoControlador->obtenerCurso();
+            $controlador->cargarVista($datos['vista'], $datos);
+
+            break;
+
+        case 'modificarCurso':
+
+            $cursoControlador = new Curso_controlador();
+            $respuesta = $cursoControlador->modificarCurso();
+
+            if (is_array($respuesta)) {
+                $datos = $cursoControlador->obtenerCurso($respuesta['curso']['idCurso']);
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($respuesta);
+            }
 
             break;
 

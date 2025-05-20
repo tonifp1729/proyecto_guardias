@@ -156,6 +156,36 @@
             return $count > 0;
         }
 
+        /**
+         * Verifica si existen solapamientos de fechas con otros cursos (excluyendo el curso actual).
+         *
+         * Comprueba si las fechas de inicio o fin propuestas se solapan con las fechas de otros cursos,
+         * ignorando el curso con el ID proporcionado.
+         *
+         * @param string - $fechaInicio Fecha de inicio propuesta.
+         * @param string - $fechaFin Fecha de fin propuesta.
+         * @param int - $idCurso ID del curso que se está modificando.
+         * @return bool - Devuelve true si hay solapamientos con otros cursos, false si no.
+         */
+        public function existeSolapamiento($fechaInicio, $fechaFin, $idCurso) {
+            $sql = "SELECT COUNT(*) FROM Curso WHERE id != ? AND ((? BETWEEN fecha_inicio AND fecha_fin) OR (? BETWEEN fecha_inicio AND fecha_fin) OR (fecha_inicio BETWEEN ? AND ?) OR (fecha_fin BETWEEN ? AND ?))";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("sssssss", $idCurso, $fechaInicio, $fechaFin, $fechaInicio, $fechaFin, $fechaInicio, $fechaFin);
+            $consulta->execute();
+            $consulta->bind_result($count);
+            $consulta->fetch();
+            $consulta->close();
+
+            return $count > 0;
+        }
+
+
+        /**
+         * Obtiene todos los cursos registrados en la base de datos.
+         * Devuelve un array con la información básica de cada curso, incluyendo su estado.
+         * @return array Lista de cursos como arrays asociativos.
+         */
         public function listarCursos() {
             $sql = "SELECT id, anio_academico, fecha_inicio, fecha_fin, estado FROM Curso";
 
@@ -172,6 +202,11 @@
             return $cursos;
         }
 
+        /**
+         * Elimina un curso de la base de datos según su ID.
+         * @param int $idCurso ID del curso a eliminar.
+         * @return bool Devuelve true si el curso fue eliminado correctamente, false si no.
+         */
         public function eliminarCurso($idCurso) {
             $sql = "DELETE FROM Curso WHERE id = ?";
             $consulta = $this->conexion->prepare($sql);
@@ -181,6 +216,36 @@
             return $consulta->affected_rows > 0;
         }
 
+        /**
+         * Verifica si existen solicitudes vinculadas a un curso con fecha de inicio anterior a una fecha dada.
+         * Este método se utiliza para validar que un curso activo no tenga solicitudes afectadas por el cambio de fechas.
+         * @param int $idCurso ID del curso que se está evaluando.
+         * @param string $nuevaFin Nueva fecha de fin propuesta para el curso.
+         * @return bool Devuelve true si hay solicitudes antes de la nueva fecha de fin, false si no.
+         */
+        public function haySolicitudesAntesDe($idCurso, $nuevaFin) {
+            $sql = "SELECT COUNT(*) as total FROM Solicitud WHERE id_Curso = ? AND fecha_inicio_ausencia < ?";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("is", $idCurso, $nuevaFin);
+            $consulta->execute();
+            $consulta->bind_result($cantidad);
+            $consulta->fetch();
+            $consulta->close();
+
+            return $cantidad > 0;
+        }
+
+        /**
+         * Actualiza los datos de un curso en la base de datos.
+         * Modifica la fecha de inicio, fecha de fin, año académico y estado del curso con el ID proporcionado.
+         * @param int - $idCurso ID del curso a modificar.
+         * @param string - $fechaInicio Nueva fecha de inicio.
+         * @param string - $fechaFin Nueva fecha de fin.
+         * @param string - $anioAcademico Año académico en formato 'yy/yy'.
+         * @param string - $estado Nuevo estado del curso ('A', 'F', 'P').
+         * @return bool - Devuelve true si se actualizó al menos una fila, false si no hubo cambios.
+         */
         public function modificarCurso($idCurso, $fechaInicio, $fechaFin, $anioAcademico, $estado) {
             $sql = "UPDATE Curso SET fecha_inicio = ?, fecha_fin = ?, anio_academico = ?, estado = ? WHERE id = ?";
             $consulta = $this->conexion->prepare($sql);

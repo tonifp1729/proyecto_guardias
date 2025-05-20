@@ -23,9 +23,9 @@
                 <p>Fin: <?php echo htmlspecialchars($curso['fecha_fin']); ?></p>
 
                 <?php if ($estado === 'A'): ?>
-                    <a href="index.php?accion=modificarCurso&id=<?php echo $curso['id']; ?>">Modificar curso</a>
+                    <a href="index.php?accion=irModificarCurso&id=<?php echo $curso['id']; ?>">Modificar curso</a>
                 <?php elseif ($estado === 'P'): ?>
-                    <a href="index.php?accion=modificarCurso&id=<?php echo $curso['id']; ?>">Modificar curso</a>
+                    <a href="index.php?accion=irModificarCurso&id=<?php echo $curso['id']; ?>">Modificar curso</a>
                     <a href="index.php?accion=borrarCurso&id=<?php echo $curso['id']; ?>">Borrar curso</a>
                 <?php elseif ($estado === 'F'): ?>
                     <a href="index.php?accion=mostrarCurso&id=<?php echo $curso['id']; ?>">Mostrar curso</a>
