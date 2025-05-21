@@ -26,10 +26,10 @@
                     <a href="index.php?accion=irModificarCurso&id=<?php echo $curso['id']; ?>">Modificar curso</a>
                 <?php elseif ($estado === 'P'): ?>
                     <a href="index.php?accion=irModificarCurso&id=<?php echo $curso['id']; ?>">Modificar curso</a>
-                    <a href="index.php?accion=borrarCurso&id=<?php echo $curso['id']; ?>">Borrar curso</a>
+                    <a href="index.php?accion=borrarCurso&id=<?php echo $curso['id']; ?>" class="btn-borrar-curso" data-anio="<?php echo htmlspecialchars($curso['anio_academico']); ?>">Borrar curso</a>
                 <?php elseif ($estado === 'F'): ?>
                     <a href="index.php?accion=mostrarCurso&id=<?php echo $curso['id']; ?>">Mostrar curso</a>
-                    <a href="index.php?accion=borrarCurso&id=<?php echo $curso['id']; ?>">Borrar curso</a>
+                    <a href="index.php?accion=borrarCurso&id=<?php echo $curso['id']; ?>" class="btn-borrar-curso" data-anio="<?php echo htmlspecialchars($curso['anio_academico']); ?>">Borrar curso</a>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
@@ -37,3 +37,4 @@
         <p>No hay cursos registrados.</p>
     <?php endif; ?>
 </div>
+<script src="js/validarCurso.js"></script>

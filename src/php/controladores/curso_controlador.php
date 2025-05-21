@@ -55,7 +55,7 @@
 
                 //Comprobamos si existe solapamiento de fechas con los cursos anteriores, si la hay volvemos a la pantalla de formulario
                 if ($this->curso->existeCoincidencia($fechaInicio, $fechaFinalizacion)) {
-                    return 'formnuevocurso';
+                    return ['vista' => 'formnuevocurso', 'error' => 'fecha-solapada'];
                 }
 
                 //Definimos la fecha actual para realizar validación
@@ -144,12 +144,12 @@
 
                 //Validamos que no haya solapamiento con otros cursos (excluyendo el actual)
                 if ($this->curso->existeSolapamiento($nuevaInicio, $nuevaFin, $idCurso)) {
-                    return ['vista' => 'formmodcurso', 'curso' => $cursoActual];
+                    return ['vista' => 'formmodcurso', 'curso' => $cursoActual, 'error' => 'fecha-solapada'];
                 }
 
                 //Comprobamos que el curso no tenga solicitudes antes de la nueva fecha de fin que se va a establecer
                 if ($estado === 'A' && $this->solicitud->haySolicitudesAntesDe($idCurso, $nuevaFin)) {
-                    return ['vista' => 'formmodcurso', 'curso' => $cursoActual];
+                    return ['vista' => 'formmodcurso', 'curso' => $cursoActual, 'error' => 'hay-solicitudes'];
                 }
 
                 $anoInicio = date('y', strtotime($nuevaInicio));

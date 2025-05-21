@@ -56,8 +56,13 @@
         case 'iniciarCurso':
 
             $cursoControlador = new Curso_controlador();
-            $vista = $cursoControlador->iniciarCurso();
-            $controlador->cargarVista($vista);
+            $datos = $cursoControlador->iniciarCurso();
+   
+            if (is_array($datos)) {
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
 
             break;
 
@@ -86,15 +91,16 @@
             break;
 
         case 'modificarCurso':
-
+            
             $cursoControlador = new Curso_controlador();
-            $respuesta = $cursoControlador->modificarCurso();
+            $datos = $cursoControlador->modificarCurso();
 
-            if (is_array($respuesta)) {
-                $datos = $cursoControlador->obtenerCurso($respuesta['curso']['idCurso']);
+            if (is_array($datos)) {
+                $cursoActual = $cursoControlador->obtenerCurso($datos['curso']['idCurso']);
+                $datos = array_merge($cursoActual, $datos);
                 $controlador->cargarVista($datos['vista'], $datos);
             } else {
-                $controlador->cargarVista($respuesta);
+                $controlador->cargarVista($datos);
             }
 
             break;

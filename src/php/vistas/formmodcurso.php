@@ -7,7 +7,7 @@
 ?>
 <div class="container">
     <h1><?php echo htmlspecialchars($curso['anoAcademico']); ?></h1>
-    <form action="index.php?accion=modificarCurso" method="POST">
+    <form action="index.php?accion=modificarCurso" method="POST" class="form-curso">
         <!-- Campo oculto con el id que necesitamos por el envío post -->
         <input type="hidden" name="idCurso" value="<?php echo htmlspecialchars($curso['idCurso']); ?>">
         <div class="form-group">
@@ -22,4 +22,8 @@
         </div>
         <button type="submit">Aceptar modificación</button>
     </form>
+        <?php if (isset($error)): ?>
+        <div id="error-server" class="mensaje-error" data-error="<?= htmlspecialchars($error) ?>"></div>
+    <?php endif; ?>
 </div>
+<script src="js/validarCurso.js"></script>

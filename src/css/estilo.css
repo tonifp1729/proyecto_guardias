@@ -149,6 +149,23 @@ form button[type="submit"]:disabled {
     cursor: not-allowed;
 }
 
+/* Mensaje de error */
+.mensaje-error {
+    background-color: #ffe0e0;
+    border: 1px solid #ff4d4d;
+    color: #b30000;
+    padding: 10px 15px;
+    margin-top: 15px;
+    border-radius: 6px;
+    max-width: 500px;
+    font-family: sans-serif;
+}
+
+.mensaje-error p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
 /* VISTAS DE LA APLICACIÓN */
 
 /* Contenedor del login */

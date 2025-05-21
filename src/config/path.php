@@ -15,10 +15,11 @@
 
     /* Rutas de acceso de los ficheros para pruebas locales */
     define('RUTA_PROYECTO', 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/');
-    define('RUTA_VENDOR_AUTOLOAD','C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/vendor/autoload.php');
+    define('RUTA_VENDOR_AUTOLOAD', RUTA_PROYECTO . 'vendor/autoload.php');
     define('RUTA_CONFIGURACION', RUTA_PROYECTO . 'src/config/');
     define('RUTA_MODELOS', RUTA_PROYECTO . 'src/php/modelos/');
     define('RUTA_VISTAS', RUTA_PROYECTO . 'src/php/vistas/');
     define('RUTA_CONTROLADORES', RUTA_PROYECTO . 'src/php/controladores/');
+    define('RUTA_CLIENTE', RUTA_PROYECTO . 'js/');
 
 ?>
