@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'hay-solicitudes':
                 mensajeServidor = 'No se puede modificar la fecha de finalización porque existen solicitudes antes de esa fecha.';
                 break;
+            case 'no-cambios':
+                mensajeServidor = 'No se realizaron cambios en las fechas, no se procederá a la modificación.';
+                break;
         }
 
         if (mensajeServidor) {

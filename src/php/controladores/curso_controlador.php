@@ -147,8 +147,8 @@
                     return ['vista' => 'formmodcurso', 'curso' => $cursoActual, 'error' => 'fecha-solapada'];
                 }
 
-                //Comprobamos que el curso no tenga solicitudes antes de la nueva fecha de fin que se va a establecer
-                if ($estado === 'A' && $this->solicitud->haySolicitudesAntesDe($idCurso, $nuevaFin)) {
+                //Comprobamos que el curso no tenga solicitudes antes de la nueva fecha de fin
+                if ($estado === 'A' && $this->curso->haySolicitudesAntesDe($idCurso, $nuevaFin)) {
                     return ['vista' => 'formmodcurso', 'curso' => $cursoActual, 'error' => 'hay-solicitudes'];
                 }
 
@@ -156,9 +156,22 @@
                 $anoFin = date('y', strtotime($nuevaFin));
                 $anoAcademico = $anoInicio . '/' . $anoFin;
 
-                $this->curso->modificarCurso($idCurso, $nuevaInicio, $nuevaFin, $anoAcademico, $estado);
+                //Comprobamos si el estado debe de ser modificado
+                if ($cursoActual['fechaInicio'] !== $nuevaInicio || $cursoActual['fechaFinalizacion'] !== $nuevaFin) {
 
-                return 'avisoexito';
+                    if ($nuevaFin <= $hoy) {
+                        $estado = 'F';
+                    } elseif ($nuevaInicio > $hoy) {
+                        $estado = 'P';
+                    } else {
+                        $estado = 'A';
+                    }
+
+                    $this->curso->modificarCurso($idCurso, $nuevaInicio, $nuevaFin, $anoAcademico, $estado);
+                    return 'avisoexito';
+                } else {
+                    return ['vista' => 'formmodcurso', 'curso' => $cursoActual, 'error' => 'no-cambios'];
+                }
             }
 
             return ['vista' => 'formmodcurso', 'curso' => $cursoActual];
