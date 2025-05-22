@@ -12,13 +12,11 @@
         <input type="hidden" name="idCurso" value="<?php echo htmlspecialchars($curso['idCurso']); ?>">
         <div class="form-group">
             <label for="fecha_inicio">Fecha de Inicio:</label>
-            <input type="date" id="fecha_inicio" name="fecha_inicio"
-                value="<?php echo htmlspecialchars($curso['fechaInicio']); ?>" required>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" value="<?php echo htmlspecialchars($curso['fechaInicio']); ?>"  data-inicio-original="<?php echo htmlspecialchars($curso['fechaInicio']); ?>" required>
         </div>
         <div class="form-group">
             <label for="fecha_fin">Fecha de Finalización:</label>
-            <input type="date" id="fecha_fin" name="fecha_fin"
-                value="<?php echo htmlspecialchars($curso['fechaFinalizacion']); ?>" required>
+            <input type="date" id="fecha_fin" name="fecha_fin" value="<?php echo htmlspecialchars($curso['fechaFinalizacion']); ?>" data-fin-original="<?php echo htmlspecialchars($curso['fechaFinalizacion']); ?>" required>
         </div>
         <button type="submit">Aceptar modificación</button>
     </form>

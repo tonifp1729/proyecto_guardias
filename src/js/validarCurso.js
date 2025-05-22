@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (fechaInicio === fechaInicioOriginal && fechaFin === fechaFinOriginal) {
+                e.preventDefault();
+                mostrarErrorCliente('No se realizaron cambios en las fechas, no se procederá a la modificación.');
+                return;
+            }
+
             const existente = document.getElementById('error-cliente');
             if (existente) existente.remove();
         });
