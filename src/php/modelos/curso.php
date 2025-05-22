@@ -6,7 +6,6 @@
         private $conexion;
 
         public function __construct() {
-            //Creamos un objeto e inicializamos la conexión a la base de datos
             $db = new Conexiondb();
             $this->conexion = $db->conexion;
         }
@@ -254,5 +253,4 @@
 
             return $consulta->affected_rows > 0;
         }
-
     }

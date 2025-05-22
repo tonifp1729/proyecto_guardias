@@ -20,7 +20,8 @@
 
         case 'loginGoogle':
 
-            $vista = Usuario_controlador::inicioSesionGoogle();
+            $usuarioControlador = new Usuario_controlador();
+            $vista = $usuarioControlador->inicioSesionGoogle();
             $controlador->cargarVista($vista);
 
             break;
@@ -102,6 +103,45 @@
             } else {
                 $controlador->cargarVista($datos);
             }
+
+            break;
+
+        case 'irModificarUsuario':
+
+            $usuarioControlador = new  Usuario_controlador();
+            $datos = $usuarioControlador->cargarModificarUsuario();
+            $controlador->cargarVista($datos['vista'], $datos);
+
+            break;
+
+        case 'modificarUsuario':
+            
+            $usuarioControlador = new  Usuario_controlador();
+            $datos = $usuarioControlador->modificarUsuario();
+
+            if (is_array($datos)) {
+                $usuarioActual = $usuarioControlador->obtenerCurso($datos['usuario']['idUsuario']);
+                $datos = array_merge($usuarioActual, $datos);
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
+
+            break;
+
+        case 'borrarUsuario':
+
+            $usuarioControlador = new Usuario_controlador();
+            $vista = $usuarioControlador->borrarUsuario();
+            $controlador->cargarVista($vista);
+
+            break;
+
+        case 'listadoUsuarios':
+
+            $usuarioControlador = new Usuario_controlador();
+            $datos = $usuarioControlador->obtenerUsuarios();
+            $controlador->cargarVista($datos['vista'], $datos);
 
             break;
 

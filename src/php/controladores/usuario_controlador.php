@@ -5,7 +5,13 @@
 
     class Usuario_controlador {
 
-        public static function inicioSesionGoogle() {
+        private $usuario;
+
+        public function __construct() {
+            $this->usuario = new Usuario();
+        }
+
+        public function inicioSesionGoogle() {
 
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -46,14 +52,12 @@
                 $apellidos = $perfil->familyName;
 
                 //Verificamos existe en la base de datos y lo insertamos si no está
-                $modeloUsuario = new Usuario();
-
-                if (!$modeloUsuario->correoRegistrado($correo)) {
-                    $modeloUsuario->insertarUsuario($correo, $nombre, $apellidos, 'C');
+                if (!$this->usuario->correoRegistrado($correo)) {
+                    $this->usuario->insertarUsuario($correo, $nombre, $apellidos, 'C');
                 }
 
                 //Recuperamos los datos del usuario
-                $datos = $modeloUsuario->obtenerDatosSesionUsuario($correo);
+                $datos = $this->usuario->obtenerDatosSesionUsuario($correo);
 
                 //Guardamos los datos en la sesión
                 $_SESSION['id'] = $datos['id'];
@@ -67,4 +71,80 @@
                 exit;
             }
         }
+
+        public function obtenerUsuarios() {
+            $usuarios = $this->usuario->listarUsuarios();
+            return ['vista' => 'listarusuarios', 'usuarios' => $usuarios];
+        }
+
+        /**
+         * Se encarga de retornar todos los datos que se deben usar para cargar la vista de modificación de usuarios
+         */
+        public function cargarModificarUsuario() {
+            $idUsuario = $_GET['id'];
+
+            $prepararUsuario = $this->usuario->obtenerUsuario($idUsuario);
+            $roles = $this->usuario->obtenerTodosRoles();
+
+            return ['vista' => 'formmodusuario', 'usuario' => $usuario, 'roles' => $roles];
+        }
+
+        public function modificarUsuario() {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+                $idUsuario = $_POST['id'];
+                $correo = trim($_POST['correo']);
+                $rol = $_POST['rol'];
+
+                $usuarioActual = $this->usuario->obtenerUsuario($idUsuario);
+
+                //Todos los campos son obligatorios
+                if (empty($correo) || empty($rol)) {
+                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual, 'error' => 'campos-obligatorios'];
+                }
+
+                //Validamos el dominio de correo electrónico
+                if (!preg_match('/^[a-zA-Z0-9._%+-]+@fundacionloyola\.es$/', $correo)) {
+                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual, 'error' => 'correo-no-valido'];
+                }
+
+                //Verificamos que no haya otro usuario con ese correo
+                if ($this->usuario->correoExistenteEnOtroUsuario($correo, $idUsuario)) {
+                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual, 'error' => 'correo-duplicado'];
+                }
+
+                //Ejecutamos la modificación
+                $modificado = $this->usuario->modificarUsuario($idUsuario, $correo, $rol);
+
+                if ($modificado) {
+                    return 'avisoexito';
+                } else {
+                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual];
+                }
+            }
+
+            return ['vista' => 'formmodusuario', 'curso' => $cursoActual];
+        }
+
+        /**
+         * Elimina un usuario de la base de datos.
+         *
+         * Este método obtiene el ID del usuario desde la URL (`$_GET['id']`)
+         *
+         * @return string - Devuelve la acción 'listarusuarios' si el rol del usuario es de administrador y no se elimina o 'avisoexito' si la eliminación fue realizada con éxito.
+         */
+        public function borrarUsuario() {
+            $idUsuario = $_GET['id'];
+
+            $prepararUsuario = $this->usuario->obtenerUsuario($idUsuario);
+
+            if ($prepararUsuario['rol'] === 'A') {
+                return 'listarusuarios';
+            }
+
+            $this->usuario->eliminarUsuario($idUsuario);
+
+            return 'avisoexito';
+        }
+
     }

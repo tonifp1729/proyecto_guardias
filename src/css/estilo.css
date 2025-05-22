@@ -263,6 +263,72 @@ form button[type="submit"]:disabled {
     font-size: 16px;
 }
 
+/* Vista del listado de usuarios */
+
+/* Contenedor del listado de usuarios */
+#listado-usuarios {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: var(--padding-general);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Tarjeta de cada usuario */
+#listado-usuarios .usuario {
+    background-color: var(--color-fondo-claro);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 160px; /* un poco menos que en cursos para mejor proporción */
+    transition: transform 0.3s ease;
+}
+
+#listado-usuarios .usuario:hover {
+    transform: scale(1.02);
+}
+
+/* Nombre completo del usuario */
+#listado-usuarios .usuario h2 {
+    margin: 0 0 15px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+/* Enlaces dentro de usuario */
+#listado-usuarios .usuario a {
+    display: inline-block;
+    margin: 8px 10px 0 0;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background-color: var(--color-primario);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#listado-usuarios .usuario a:hover {
+    background-color: var(--color-hover);
+    transform: scale(1.03);
+}
+
+/* Botón de borrar usuario */
+#listado-usuarios .usuario a.btn-borrar-usuario {
+    background-color: #dc3545;
+}
+
+#listado-usuarios .usuario a.btn-borrar-usuario:hover {
+    background-color: #c82333;
+}
+
 /* Vista del listado de cursos */
 #listado-cursos {
     display: grid;

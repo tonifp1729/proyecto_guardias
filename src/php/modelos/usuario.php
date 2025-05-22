@@ -54,7 +54,9 @@
             }
         }
 
-        //Es la consulta que realizamos una vez accedemos por el inicio de sesión, para llenar los datos de sesión que necesitaremos durante el uso de la aplicación
+        /**
+         * Es la consulta que realizamos una vez accedemos por el inicio de sesión, para llenar los datos de sesión que necesitaremos durante el uso de la aplicación.
+         */
         public function obtenerDatosSesionUsuario($correo) {
             $SQL = "SELECT id, nombre, id_Rol FROM Usuario WHERE correo = ?";
             $consulta = $this->conexion->prepare($SQL);
@@ -69,10 +71,11 @@
             }
         }
 
-        //AQUÍ TENEMOS QUE MODIFICAR LA CONSULTA 
-        //Obtenemos todos los roles que pueden ser asignados a un profesor
+        /**
+         * Obtenemos todos los roles que pueden ser asignados a un profesor.
+         */
         public function obtenerTodosRoles() {
-            $SQL = "SELECT idRol, nombreRol FROM Roles";
+            $SQL = "SELECT id, nombre FROM Rol";
             $resultado = $this->conexion->query($SQL);
             
             $roles = [];
@@ -82,21 +85,30 @@
             return $roles;
         }
 
-        //AQUÍ TENEMOS QUE MODIFICAR LA CONSULTA 
+        /**
+         * Obtenemos el listado de usuarios
+         */
         public function listarUsuarios() {
-            $SQL = "SELECT idUsuario, nombre, apellidos FROM Usuarios";
-            $resultado = $this->conexion->query($SQL);
+            $sql = "SELECT id, nombre, apellidos FROM Usuario WHERE correo != 'dirsecundaria.guadalupe@fundacionloyola.es'";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
 
             $usuarios = [];
+
             while ($usuario = $resultado->fetch_assoc()) {
                 $usuarios[] = $usuario;
             }
+
             return $usuarios;
         }
 
-        //AQUÍ TENEMOS QUE MODIFICAR LA CONSULTA 
+        /**
+         * Obtenemos los datos de un usuario según el id
+         */
         public function obtenerUsuario($idUsuario) {
-            $SQL = "SELECT u.nombre, u.apellidos, u.rol, r.nombreRol FROM Usuarios u INNER JOIN Roles r ON u.rol = r.idRol WHERE u.idUsuario = ?";
+            $SQL = "SELECT * FROM Usuario WHERE id = ?";
             $consulta = $this->conexion->prepare($SQL);
             $consulta->bind_param("i", $idUsuario);
             $consulta->execute();
@@ -107,16 +119,27 @@
             return $usuario;
         }
 
-        //AQUÍ TENEMOS QUE MODIFICAR LA CONSULTA 
-        public function modificarUsuario($idUsuario, $nombre, $apellidos, $rol, $etapas) {
+        /** 
+         * Consulta para realizar la modificación del usuario
+         */ 
+        public function modificarUsuario($idUsuario, $correo, $rol) {
             //Actualizar los datos del usuario
-            $sql = "UPDATE Usuarios SET nombre = ?, apellidos = ?, rol = ? WHERE idUsuario = ?";
-            $consulta = $this->conexion->prepare($sql); // Usar $this->conexion en lugar de $this->db
-            $consulta->bind_param('sssi', $nombre, $apellidos, $rol, $idUsuario);
+            $sql = "UPDATE Usuario SET correo = ?, id_Rol = ? WHERE id = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param('ssi', $correo, $rol, $idUsuario);
             $consulta->execute();
-        
-            //Cerrar la conexión
             $consulta->close();
-            $consultaDelete->close();
+
+            return $consulta->affected_rows > 0;
         }
+
+        public function eliminarUsuario($idUsuario) {
+            $sql = "DELETE FROM Usuario WHERE id = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idUsuario);
+            $consulta->execute();
+
+            return $consulta->affected_rows > 0;
+        }
+
     }

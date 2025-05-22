@@ -20,7 +20,7 @@
                         echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';
                         echo '<li><a href="index.php?accion=nuevoCurso">Iniciar nuevo curso</a></li>';
                         echo '<li><a href="index.php?accion=listadoCursos">Registro de cursos</a></li>';
-                        echo '<li><a href="index.php?accion=listadoUsuarios">Registro de usuarios</a></li>';
+                        echo '<li><a href="index.php?accion=listadoUsuarios">Listado de usuarios</a></li>';
                         break;
                     case 'M': //USUARIO MODERADOR
                         echo '<li><a href="#">Moderar solicitudes</a></li>';
