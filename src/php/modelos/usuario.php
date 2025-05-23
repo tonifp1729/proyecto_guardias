@@ -119,18 +119,34 @@
             return $usuario;
         }
 
+        /**
+         * Comprueba si el correo introducido está ya presente en otro usuario
+         */
+        public function correoExistente($correo, $idActual) {
+            $sql = "SELECT COUNT(*) FROM Usuario WHERE correo = ? AND id != ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param('si', $correo, $idActual);
+            $consulta->execute();
+            $consulta->bind_result($total);
+            $consulta->fetch();
+            $consulta->close();
+            return $total > 0;
+        }
+
         /** 
          * Consulta para realizar la modificación del usuario
          */ 
         public function modificarUsuario($idUsuario, $correo, $rol) {
-            //Actualizar los datos del usuario
             $sql = "UPDATE Usuario SET correo = ?, id_Rol = ? WHERE id = ?";
             $consulta = $this->conexion->prepare($sql);
             $consulta->bind_param('ssi', $correo, $rol, $idUsuario);
             $consulta->execute();
+
+            $filasAfectadas = $consulta->affected_rows;
+
             $consulta->close();
 
-            return $consulta->affected_rows > 0;
+            return $filasAfectadas > 0;
         }
 
         public function eliminarUsuario($idUsuario) {

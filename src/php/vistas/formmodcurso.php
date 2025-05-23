@@ -20,7 +20,7 @@
         </div>
         <button type="submit">Aceptar modificación</button>
     </form>
-        <?php if (isset($error)): ?>
+    <?php if (isset($error)): ?>
         <div id="error-server" class="mensaje-error" data-error="<?= htmlspecialchars($error) ?>"></div>
     <?php endif; ?>
 </div>

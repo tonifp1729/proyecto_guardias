@@ -86,13 +86,13 @@
             $prepararUsuario = $this->usuario->obtenerUsuario($idUsuario);
             $roles = $this->usuario->obtenerTodosRoles();
 
-            return ['vista' => 'formmodusuario', 'usuario' => $usuario, 'roles' => $roles];
+            return ['vista' => 'formmodusuario', 'usuario' => $prepararUsuario, 'roles' => $roles];
         }
 
         public function modificarUsuario() {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-                $idUsuario = $_POST['id'];
+                $idUsuario = $_POST['idUsuario'];
                 $correo = trim($_POST['correo']);
                 $rol = $_POST['rol'];
 
@@ -100,17 +100,20 @@
 
                 //Todos los campos son obligatorios
                 if (empty($correo) || empty($rol)) {
-                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual, 'error' => 'campos-obligatorios'];
+                    $roles = $this->usuario->obtenerTodosRoles();
+                    return ['vista' => 'formmodusuario', 'usuario' => $usuarioActual, 'roles' => $roles, 'error' => 'campos-obligatorios'];
                 }
 
                 //Validamos el dominio de correo electrónico
                 if (!preg_match('/^[a-zA-Z0-9._%+-]+@fundacionloyola\.es$/', $correo)) {
-                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual, 'error' => 'correo-no-valido'];
+                    $roles = $this->usuario->obtenerTodosRoles();
+                    return ['vista' => 'formmodusuario', 'usuario' => $usuarioActual, 'roles' => $roles, 'error' => 'correo-no-valido'];
                 }
 
                 //Verificamos que no haya otro usuario con ese correo
-                if ($this->usuario->correoExistenteEnOtroUsuario($correo, $idUsuario)) {
-                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual, 'error' => 'correo-duplicado'];
+                if ($this->usuario->correoExistente($correo, $idUsuario)) {
+                    $roles = $this->usuario->obtenerTodosRoles();
+                    return ['vista' => 'formmodusuario', 'usuario' => $usuarioActual, 'roles' => $roles, 'error' => 'correo-duplicado'];
                 }
 
                 //Ejecutamos la modificación
@@ -119,11 +122,12 @@
                 if ($modificado) {
                     return 'avisoexito';
                 } else {
-                    return ['vista' => 'formmodusuario', 'curso' => $cursoActual];
+                    $roles = $this->usuario->obtenerTodosRoles();
+                    return ['vista' => 'formmodusuario', 'usuario' => $usuarioActual, 'roles' => $roles];
                 }
             }
-
-            return ['vista' => 'formmodusuario', 'curso' => $cursoActual];
+            $roles = $this->usuario->obtenerTodosRoles();
+            return ['vista' => 'formmodusuario', 'usuario' => $usuarioActual, 'roles' => $roles];
         }
 
         /**
@@ -138,7 +142,7 @@
 
             $prepararUsuario = $this->usuario->obtenerUsuario($idUsuario);
 
-            if ($prepararUsuario['rol'] === 'A') {
+            if ($prepararUsuario['id_Rol'] === 'A') {
                 return 'listarusuarios';
             }
 

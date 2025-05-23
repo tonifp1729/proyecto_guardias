@@ -115,18 +115,14 @@
             break;
 
         case 'modificarUsuario':
-            
-            $usuarioControlador = new  Usuario_controlador();
+            $usuarioControlador = new Usuario_controlador();
             $datos = $usuarioControlador->modificarUsuario();
 
             if (is_array($datos)) {
-                $usuarioActual = $usuarioControlador->obtenerCurso($datos['usuario']['idUsuario']);
-                $datos = array_merge($usuarioActual, $datos);
                 $controlador->cargarVista($datos['vista'], $datos);
             } else {
                 $controlador->cargarVista($datos);
             }
-
             break;
 
         case 'borrarUsuario':
