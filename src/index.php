@@ -3,6 +3,7 @@
     require_once 'php/controladores/controlador.php';
     require_once 'php/controladores/usuario_controlador.php';
     require_once 'php/controladores/curso_controlador.php';
+    require_once 'php/controladores/solicitud_controlador.php';
 
     //Definimos esta constante en el index, ya que al cargar cada vista se realiza una comprobación sobre esta. En caso de que no se pase por el index se lanza una redirección hacia el inicio.
     DEFINE('ACCESO_PERMITIDO', true);
@@ -123,6 +124,7 @@
             } else {
                 $controlador->cargarVista($datos);
             }
+
             break;
 
         case 'borrarUsuario':
@@ -139,6 +141,21 @@
             $datos = $usuarioControlador->obtenerUsuarios();
             $controlador->cargarVista($datos['vista'], $datos);
 
+            break;
+
+        case 'nuevaSolicitud':
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->cargarDatosSolicitud();
+
+            if (is_array($datos)) {
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
+            
             break;
 
         case 'exito':

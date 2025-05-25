@@ -21,19 +21,24 @@
          * 3. Activa el curso que estaba pendiente de iniciarse.
          */
         public function verificarActivacionCurso() {
-
             $this->curso->finalizarCursos();
 
             $cursoActivo = $this->curso->cursoActivo();
 
             if (!$cursoActivo) {
-                
                 $hoy = date('Y-m-d');
                 $cursoPendiente = $this->curso->buscarCursoPendiente($hoy);
 
                 if ($cursoPendiente) {
                     $this->curso->activarCurso($cursoPendiente);
+                    $cursoActivo = $this->curso->cursoActivo();
                 }
+            }
+
+            if ($cursoActivo) {
+                $_SESSION['idCursoActivo'] = $cursoActivo['idCurso'];
+            } else {
+                unset($_SESSION['idCursoActivo']);
             }
         }
 
