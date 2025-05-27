@@ -31,40 +31,54 @@
         /**
          * Listamos las solicitudes realizadas por el usuario en el curso activo.
          */
-        public function listarSolicitudesActivasUsuario() {
-            $sql = "SELECT id, nombre, apellidos FROM Usuario WHERE correo != 'dirsecundaria.guadalupe@fundacionloyola.es'";
-
+        public function listarSolicitudesActivasUsuario($idUsuario, $idCurso) {
+            $sql = "SELECT * FROM Solicitud WHERE id_Usuario = ? AND id_Curso = ?";
             $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("ii", $idUsuario, $idCurso);
             $consulta->execute();
             $resultado = $consulta->get_result();
-
-            $usuarios = [];
-
-            while ($usuario = $resultado->fetch_assoc()) {
-                $usuarios[] = $usuario;
+            
+            $solicitudes = [];
+            while ($fila = $resultado->fetch_assoc()) {
+                $solicitudes[] = $fila;
             }
-
-            return $usuarios;
+            return $solicitudes;
         }
 
         /**
          * Cargamos los archivos de una solicitud
          */
-        public function listarArchivosSolicitud($idUsuario, $fechaInicioAusencia) {
-            $sql = "";
+        public function listarArchivosSolicitud($idUsuario, $fechaPresentacion, $numSolicitud) {
+            $sql = "SELECT nombre_original, nombre_generado, tipo_archivo, ruta_archivo FROM Archivo WHERE id_Usuario_Solicitud = ? AND fecha_presentacion = ? AND num = ?";
+            
             $consulta = $this->conexion->prepare($sql);
-            $consulta->bind_param("is", $idUsuario, $fechaInicioAusencia);
+            $consulta->bind_param("isi", $idUsuario, $fechaPresentacion, $numSolicitud);
             $consulta->execute();
             $resultado = $consulta->get_result();
-        
+
             $archivos = [];
             if ($resultado->num_rows > 0) {
                 while ($archivo = $resultado->fetch_assoc()) {
                     $archivos[] = $archivo;
                 }
             }
-        
+
             return $archivos;
+        }
+
+        /**
+         * Comprobamos la existencia de solapamiento con entre las solicitudes presentadas
+         */
+        public function existeSolapamiento($idUsuario, $fechaInicio, $fechaFin) {
+            $sql = "SELECT COUNT(*) as total FROM Solicitud 
+                    WHERE id_Usuario = ? 
+                    AND ((fecha_inicio_ausencia <= ? AND fecha_fin_ausencia >= ?))";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("iss", $idUsuario, $fechaFin, $fechaInicio);
+            $consulta->execute();
+            $resultado = $consulta->get_result()->fetch_assoc();
+            return $resultado['total'] > 0;
         }
 
         /**
@@ -125,11 +139,23 @@
         /**
          * Hace inserción en la base de datos de los archivos de la solicitud.
          */
-        public function insertarArchivo($idUsuario, $fechaPresentacion, $numSolicitud, $nombreOriginal, $nombreGenerado, $tipoArchivo, $ruta) {
-            $sql = "INSERT INTO Archivo (id_Usuario_Solicitud, fecha_presentacion, num, nombre_original, nombre_generado, tipo_archivo, ruta_archivo)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bind_param("issssss", $idUsuario, $fechaPresentacion, $numSolicitud, $nombreOriginal, $nombreGenerado, $tipoArchivo, $ruta);
-            $stmt->execute();
+        public function insertarArchivo($idUsuario, $fechaPresentacion, $numSolicitud, $nombreOriginal, $nombreGenerado, $extension, $rutaRelativa) {
+            $sql = "INSERT INTO Archivo (id_Usuario_Solicitud, fecha_presentacion, num, nombre_original, nombre_generado, tipo_archivo, ruta_archivo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            $consulta = $this->conexion->prepare($sql);
+
+            $consulta->bind_param(
+                "isissss",
+                $idUsuario,
+                $fechaPresentacion,
+                $numSolicitud,
+                $nombreOriginal,
+                $nombreGenerado,  
+                $extension,
+                $rutaRelativa
+            );
+
+            return $consulta->execute();
         }
+
     }

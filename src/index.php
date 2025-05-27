@@ -158,6 +158,19 @@
             
             break;
 
+        case 'crearSolicitud':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->crearSolicitud();
+   
+            if (is_array($datos)) {
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
+
+            break;
+
         case 'exito':
 
             $vista = 'avisoexito';
