@@ -252,7 +252,7 @@
                             'error' => $archivos['materiales']['error'][$index],
                             'size' => $archivos['materiales']['size'][$index],
                         ];
-                        $infoArchivo = $this->manejarSubidaArchivo($file, 'material');
+                        $infoArchivo = $this->manejarSubidaArchivo($file, 'materiales');
                         if ($infoArchivo !== false) {
                             $datos['materiales'][] = $infoArchivo;
                         }
