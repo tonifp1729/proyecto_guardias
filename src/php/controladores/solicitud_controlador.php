@@ -83,6 +83,98 @@
         }
 
         /**
+         * Carga los datos de la solicitud
+         */
+        public function cargarModificarSolicitud() {
+            // Recogemos los datos de la URL
+            $idUsuario = $_GET['id'] ?? null;
+            $fechaPresentacion = $_GET['fecha'] ?? null;
+            $num = $_GET['num'] ?? null;
+
+            // Validamos que tengamos lo necesario
+            if (!$idUsuario || !$fechaPresentacion || !$num) {
+                return [
+                    'vista' => 'error',
+                    'error' => 'Faltan datos para modificar la solicitud.'
+                ];
+            }
+
+            // Obtenemos la solicitud
+            $solicitud = $this->solicitud->obtenerSolicitud($idUsuario, $fechaPresentacion, $num);
+            if (!$solicitud) {
+                return [
+                    'vista' => 'error',
+                    'error' => 'No se ha encontrado la solicitud especificada.'
+                ];
+            }
+
+            // Obtenemos las horas seleccionadas
+            $horasSeleccionadas = $this->solicitud->obtenerHorasDeSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            // Obtenemos los motivos disponibles
+            $motivos = $this->solicitud->obtenerMotivos();
+
+            // Obtenemos archivos asociados
+            $archivos = $this->solicitud->obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            return [
+                'vista' => 'formmodsolicitud',
+                'solicitud' => $solicitud,
+                'horasSeleccionadas' => $horasSeleccionadas,
+                'motivos' => $motivos,
+                'archivos' => $archivos
+            ];
+        }
+
+        /**
+         * 
+         * 
+         */
+        public function modificarSolicitud() {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+                $idSolicitud = intval($_POST['idSolicitud'] ?? 0);
+                $idUsuario = intval($_POST['id_usuario'] ?? 0);
+                $motivo = intval($_POST['motivo'] ?? 0);
+                $descripcion = $_POST['descripcion'] ?? '';
+                $comentario = $_POST['comentario'] ?? '';
+                $horas = $_POST['horas'] ?? [];
+
+                // Actualizar datos básicos de la solicitud
+                $resultado = $this->solicitud->actualizarSolicitud($idSolicitud, $motivo, $descripcion, $comentario);
+
+                if (!$resultado) {
+                    echo "Error al actualizar la solicitud.";
+                    return;
+                }
+
+                // Actualizar horas seleccionadas
+                $this->solicitud->actualizarHorasSolicitud($idSolicitud, $horas);
+
+                // Eliminar archivos marcados
+                if (!empty($_POST['archivos_a_eliminar'])) {
+                    foreach ($_POST['archivos_a_eliminar'] as $idArchivo) {
+                        $this->solicitud->eliminarArchivo(intval($idArchivo));
+                    }
+                }
+
+                // Guardar archivos nuevos (si llegan)
+                if (!empty($_FILES['justificantes']) && $_FILES['justificantes']['error'][0] !== UPLOAD_ERR_NO_FILE) {
+                    $this->solicitud->guardarArchivos($idSolicitud, $_FILES['justificantes'], 'justificante');
+                }
+
+                if (!empty($_FILES['materiales']) && $_FILES['materiales']['error'][0] !== UPLOAD_ERR_NO_FILE) {
+                    $this->solicitud->guardarArchivos($idSolicitud, $_FILES['materiales'], 'material');
+                }
+
+
+                return 'avisoexito';
+            } else {
+                return  'inicio';
+            }
+        }
+
+        /**
          * Necesitamos generar nombres únicos para los archivos que se van a introducir con cada solicitud.
          * 1. Extrae el nombre inicial.
          * 2. Extrae la extensión.

@@ -179,6 +179,26 @@
 
             break;
 
+        case 'irModificarSolicitud':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->cargarModificarSolicitud();
+            $controlador->cargarVista($datos['vista'], $datos);
+
+            break;
+
+        case 'modificarSolicitud':
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->modificarSolicitud();
+
+            if (is_array($datos)) {
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
+
+            break;
+
         case 'denegarAcceso':
 
             $vista = 'accesodenegadonocurso';

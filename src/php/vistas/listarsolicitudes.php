@@ -35,9 +35,9 @@
                     </td>
                     <td>
                         <?php if ($estado === 'a'): ?>
-                            <a href="index.php?accion=mostrar_solicitud&id=<?= $_SESSION['idCursoActivo'] ?>">Mostrar</a>
+                            <a href="index.php?accion=irModificarSolicitud&id=<?= $_SESSION['id'] ?>&fecha=<?= $solicitud['fecha_presentacion'] ?>&num=<?= $solicitud['num'] ?>">Mostrar</a>
                         <?php else: ?>
-                            <a href="index.php?accion=modificar_solicitud&id=<?= $_SESSION['idCursoActivo'] ?>">Modificar</a>
+                            <a href="index.php?accion=irModificarSolicitud&id=<?= $_SESSION['id'] ?>&fecha=<?= $solicitud['fecha_presentacion'] ?>&num=<?= $solicitud['num'] ?>">Modificar</a>
                         <?php endif; ?>
                     </td>
                 </tr>

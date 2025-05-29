@@ -140,4 +140,57 @@
             return $consulta->execute();
         }
 
+        /**
+         * Devuelve una solicitud concreta a partir de su clave primaria.
+         */
+        public function obtenerSolicitud($idUsuario, $fechaPresentacion, $num) {
+            $sql = "SELECT * FROM Solicitud WHERE id_Usuario = ? AND fecha_presentacion = ? AND num = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("isi", $idUsuario, $fechaPresentacion, $num);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+            return $resultado->fetch_assoc();
+        }
+
+        /**
+         * 
+         */
+        public function obtenerHorasDeSolicitud($idUsuario, $fechaPresentacion, $num) {
+            $sql = "SELECT num_hora FROM Hora WHERE id_Usuario_Solicitud = ? AND fecha_presentacion = ? AND num = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("isi", $idUsuario, $fechaPresentacion, $num);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+            
+            $horas = [];
+            while ($fila = $resultado->fetch_assoc()) {
+                $horas[] = (int)$fila['num_hora'];
+            }
+
+            return $horas;
+        }
+
+        /**
+         * 
+         */
+        public function obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num) {
+            $sql = "SELECT * FROM Archivo WHERE id_Usuario_Solicitud = ? AND fecha_presentacion = ? AND num = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("isi", $idUsuario, $fechaPresentacion, $num);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+
+            $archivos = [];
+            while ($fila = $resultado->fetch_assoc()) {
+                $archivos[] = $fila;
+            }
+
+            return $archivos;
+        }
+
+        /**
+         * Actualiza una solicitud ya existente.
+         */
+
+
     }
