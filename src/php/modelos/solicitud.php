@@ -13,7 +13,7 @@
          * Obtenemos las solicitudes de un usuario en concreto durante un curso específico en orden decreciente por la fecha de presentación.
          */
         public function obtenerSolicitudesPorUsuarioYCurso($idUsuario, $idCurso) {
-            $sql = "SELECT s.num, s.fecha_presentacion, s.fecha_inicio_ausencia, s.fecha_fin_ausencia, s.estado, s.descripcion_solicitud, s.comentario_material, m.nombre AS motivo FROM Solicitud s INNER JOIN Motivo m ON s.id_Motivo = m.id WHERE s.id_Usuario = ? AND s.id_Curso = ? ORDER BY s.fecha_presentacion DESC";
+            $sql = "SELECT s.num, s.fecha_presentacion, s.fecha_inicio_ausencia, s.fecha_fin_ausencia, s.estado, s.descripcion_solicitud, s.comentario_material, m.nombre AS motivo FROM Solicitud s INNER JOIN Motivo m ON s.id_Motivo = m.id WHERE s.id_Usuario = ? AND s.id_Curso = ? AND s.fecha_fin_ausencia > CURDATE() ORDER BY s.fecha_presentacion DESC";
             $consulta = $this->conexion->prepare($sql);
             $consulta->bind_param("ii", $idUsuario, $idCurso);
             $consulta->execute();
