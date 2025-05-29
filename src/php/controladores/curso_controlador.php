@@ -39,6 +39,10 @@
                 $_SESSION['idCursoActivo'] = $cursoActivo['idCurso'];
             } else {
                 unset($_SESSION['idCursoActivo']);
+                if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'C') {
+                    header('Location: ../index.php?accion=denegarAcceso');
+                    exit;
+                }
             }
         }
 

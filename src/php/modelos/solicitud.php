@@ -10,6 +10,26 @@
         }
 
         /**
+         * Obtenemos las solicitudes de un usuario en concreto durante un curso específico en orden decreciente por la fecha de presentación.
+         */
+        public function obtenerSolicitudesPorUsuarioYCurso($idUsuario, $idCurso) {
+            $sql = "SELECT s.num, s.fecha_presentacion, s.fecha_inicio_ausencia, s.fecha_fin_ausencia, s.estado, s.descripcion_solicitud, s.comentario_material, m.nombre AS motivo FROM Solicitud s INNER JOIN Motivo m ON s.id_Motivo = m.id WHERE s.id_Usuario = ? AND s.id_Curso = ? ORDER BY s.fecha_presentacion DESC";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("ii", $idUsuario, $idCurso);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+            $solicitudes = [];
+
+            while ($solicitud = $resultado->fetch_assoc()) {
+                $solicitudes[] = $solicitud;
+            }
+
+            $consulta->close();
+
+            return $solicitudes;
+        }
+
+        /**
          * Con este método obtenemos los motivos que utilizará el usuario como justificación de la ausencia.
          */
         public function obtenerMotivos() {
@@ -26,44 +46,6 @@
             }
             
             return $motivos;
-        }
-
-        /**
-         * Listamos las solicitudes realizadas por el usuario en el curso activo.
-         */
-        public function listarSolicitudesActivasUsuario($idUsuario, $idCurso) {
-            $sql = "SELECT * FROM Solicitud WHERE id_Usuario = ? AND id_Curso = ?";
-            $consulta = $this->conexion->prepare($sql);
-            $consulta->bind_param("ii", $idUsuario, $idCurso);
-            $consulta->execute();
-            $resultado = $consulta->get_result();
-            
-            $solicitudes = [];
-            while ($fila = $resultado->fetch_assoc()) {
-                $solicitudes[] = $fila;
-            }
-            return $solicitudes;
-        }
-
-        /**
-         * Cargamos los archivos de una solicitud
-         */
-        public function listarArchivosSolicitud($idUsuario, $fechaPresentacion, $numSolicitud) {
-            $sql = "SELECT nombre_original, nombre_generado, tipo_archivo, ruta_archivo FROM Archivo WHERE id_Usuario_Solicitud = ? AND fecha_presentacion = ? AND num = ?";
-            
-            $consulta = $this->conexion->prepare($sql);
-            $consulta->bind_param("isi", $idUsuario, $fechaPresentacion, $numSolicitud);
-            $consulta->execute();
-            $resultado = $consulta->get_result();
-
-            $archivos = [];
-            if ($resultado->num_rows > 0) {
-                while ($archivo = $resultado->fetch_assoc()) {
-                    $archivos[] = $archivo;
-                }
-            }
-
-            return $archivos;
         }
 
         /**

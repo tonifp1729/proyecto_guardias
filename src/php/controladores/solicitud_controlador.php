@@ -15,6 +15,60 @@
         }
 
         /**
+         * Para disponer del identificador adecuado para las vistas del administrador.
+         */
+        function generarIdentificadorParaAdministrador($fecha, $num) {
+
+            $fechaFormateada = date("Ymd", strtotime($fecha));
+            $numFormateado = str_pad($num, 2, "0", STR_PAD_LEFT);
+
+            $identificadorSolicitud = $_SESSION['id'] . "_" . $fechaFormateada . "_" . $numFormateado;
+
+            return $identificadorSolicitud;
+        }
+
+        /**
+         * Para disponer del identificador adecuado para vistas comunes.
+         */
+        function generarIdentificador($fecha, $num) {
+
+            $fechaFormateada = date("Ymd", strtotime($fecha));
+            $numFormateado = str_pad($num, 2, "0", STR_PAD_LEFT);
+
+            $identificadorSolicitud = $fechaFormateada . "_" . $numFormateado;
+
+            return $identificadorSolicitud;
+        }
+
+        /**
+         * Vamos a retornar las solicitudes del usuario interesado en ver el estado de las propias presentadas.
+         * Lo hacemos a partir de los datos guardados en la variable de sesión: 
+         * id -> El usuario interesado en ver sus solicitudes
+         * idCursoActivo -> El curso activo actualmente
+         * 
+         * Al usuario común solo se le mostrarán las solicitudes presentadas en el curso actual. En caso de que
+         * no haya uno activo, no se mostrará ninguna acción a realizar en la aplicación.
+         * 
+         * @return
+         */
+        public function obtenerSolicitudesPropias() {
+            if (!isset($_SESSION['id']) || !isset($_SESSION['idCursoActivo'])) {
+                session_start();
+            }
+
+            $idUsuario = $_SESSION['id'];
+            $idCursoActivo = $_SESSION['idCursoActivo'];
+
+            $solicitudes = $this->solicitud->obtenerSolicitudesPorUsuarioYCurso($idUsuario, $idCursoActivo);
+
+            foreach ($solicitudes as &$solicitud) {
+                $solicitud['identificador'] = $this->generarIdentificador($solicitud['fecha_presentacion'], $solicitud['num']);
+            }
+
+            return ['vista' => 'listarsolicitudes', 'cursoActivo' => $idCursoActivo, 'solicitudes' => $solicitudes];
+        }
+
+        /**
          * Carga los datos necesarios para mostrar el formulario de nueva solicitud.
          */
         public function cargarDatosSolicitud() {
@@ -209,6 +263,19 @@
                 $rutaRelativa = RUTA_PROYECTO.'src/subidas/material/';
                 $this->solicitud->insertarArchivo($idUsuario, $fechaPresentacion, $numSolicitud, $nombreOriginal, $nombreGenerado, $extension, $tipoArchivo, $rutaRelativa);
             }
+
+            return 'avisoexito';
+        }
+
+        /**
+         * Elimina una solicitud de la base de datos.
+         *
+         * @return string - Devuelve la vista 'avisoexito' si la eliminación fue realizada con éxito.
+         */
+        public function borrarSolicitud() {
+            $idSolicitud = $_GET['id'];
+
+            $this->curso->eliminarSolicitud($idSolicitud);
 
             return 'avisoexito';
         }

@@ -13,8 +13,10 @@
             if (isset($_SESSION['rol'])) {
                 switch ($_SESSION['rol']) {
                     case 'C': //USUARIO COMÚN
-                        echo '<li><a href="index.php?accion=listadoSolicitudes">Solicitudes presentadas</a></li>';
-                        echo '<li><a href="index.php?accion=nuevaSolicitud">Nueva solicitud</a></li>';
+                        if (isset($_SESSION['idCursoActivo'])) {
+                            echo '<li><a href="index.php?accion=listadoSolicitudesPropias">Solicitudes presentadas</a></li>';
+                            echo '<li><a href="index.php?accion=nuevaSolicitud">Nueva solicitud</a></li>';   
+                        }
                         break;
                     case 'A': //USUARIO ADMINISTRADOR
                         echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';

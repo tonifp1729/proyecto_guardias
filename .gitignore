@@ -1,2 +1,4 @@
 /vendor/
 config.php
+src/subidas/justificantes/
+src/subidas/material/

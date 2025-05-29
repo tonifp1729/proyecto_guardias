@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (mensajeServidor) {
                 mostrarErrorCliente(mensajeServidor);
-                errorServidorDiv.remove(); // Limpia el marcador
+                errorServidorDiv.remove();
             }
         }
 });

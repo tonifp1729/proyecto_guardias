@@ -171,6 +171,21 @@
 
             break;
 
+        case 'listadoSolicitudesPropias':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->obtenerSolicitudesPropias();
+            $controlador->cargarVista($datos['vista'], $datos);
+
+            break;
+
+        case 'denegarAcceso':
+
+            $vista = 'accesodenegadonocurso';
+            $controlador->cargarVista($vista);
+
+            break;
+
         case 'exito':
 
             $vista = 'avisoexito';
