@@ -9,7 +9,6 @@ if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
     <form action="index.php?accion=modificarSolicitud" method="POST" class="form-solicitud" enctype="multipart/form-data">
 
         <!-- Campos ocultos necesarios -->
-        <input type="hidden" name="idSolicitud" value="<?= htmlspecialchars($solicitud['id']) ?>">
         <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($solicitud['id_Usuario']) ?>">
         <input type="hidden" name="fecha_presentacion" value="<?= htmlspecialchars($solicitud['fecha_presentacion']) ?>">
         <input type="hidden" name="num" value="<?= htmlspecialchars($solicitud['num']) ?>">
@@ -17,22 +16,27 @@ if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         <!-- Fechas no modificables -->
         <div class="grupo-form">
             <label>Fecha de Inicio de Ausencia:</label>
-            <input type="date" value="<?= $solicitud['fecha_inicio_ausencia'] ?>" disabled>
+            <input type="date" value="<?= $solicitud['fecha_inicio_ausencia'] ?>" readonly>
+            <input type="hidden" name="fecha_inicio_ausencia" value="<?= $solicitud['fecha_inicio_ausencia'] ?>">
         </div>
 
         <div class="grupo-form">
             <label>Fecha de Fin de Ausencia:</label>
-            <input type="date" value="<?= $solicitud['fecha_fin_ausencia'] ?>" disabled>
+            <input type="date" value="<?= $solicitud['fecha_fin_ausencia'] ?>" readonly>
+            <input type="hidden" name="fecha_fin_ausencia" value="<?= $solicitud['fecha_fin_ausencia'] ?>">
         </div>
 
         <!-- Horas seleccionadas -->
         <div class="grupo-form" id="grupoHoras">
             <h3>Selecciona Horas:</h3>
             <?php for ($i = 1; $i <= 7; $i++): ?>
-                <label>
-                    <input type="checkbox" value="<?= $i ?>" <?= in_array($i, $horasSeleccionadas) ? 'checked' : '' ?> disabled>
-                    <?= $i ?>ª Hora
-                </label>
+                <?php if (in_array($i, $horasSeleccionadas)): ?>
+                    <label>
+                        <input type="checkbox" checked disabled>
+                        <?= $i ?>ª Hora
+                    </label>
+                    <input type="hidden" name="horasSeleccionadas[]" value="<?= $i ?>">
+                <?php endif; ?>
             <?php endfor; ?>
         </div>
 
@@ -67,9 +71,16 @@ if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
                 <?php foreach ($archivos as $archivo): ?>
                     <div>
                         <label>
-                            <input type="checkbox" name="archivos_a_eliminar[]" value="<?= $archivo['id'] ?>"> Eliminar
+                            <input type="checkbox" name="archivos_a_eliminar[<?= $archivo['id'] ?>]" value="1"> Eliminar
                         </label>
-                        <a href="subidas/<?= htmlspecialchars($archivo['ruta_archivo']) ?>/<?= htmlspecialchars($archivo['nombre_generado']) ?>.<?= htmlspecialchars($archivo['tipo_archivo']) ?>" target="_blank"><?= htmlspecialchars($archivo['nombre_original']) ?></a>
+
+                        <input type="hidden" name="archivos_info[<?= $archivo['id'] ?>][ruta]" value="<?= htmlspecialchars($archivo['ruta_archivo']) ?>">
+                        <input type="hidden" name="archivos_info[<?= $archivo['id'] ?>][nombre]" value="<?= htmlspecialchars($archivo['nombre_generado']) ?>">
+                        <input type="hidden" name="archivos_info[<?= $archivo['id'] ?>][tipo]" value="<?= htmlspecialchars($archivo['tipo_archivo']) ?>">
+
+                        <a href="subidas/<?= htmlspecialchars($archivo['ruta_archivo']) ?>/<?= htmlspecialchars($archivo['nombre_generado']) ?>.<?= htmlspecialchars($archivo['tipo_archivo']) ?>" target="_blank">
+                            <?= htmlspecialchars($archivo['nombre_original']) ?>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             </div>

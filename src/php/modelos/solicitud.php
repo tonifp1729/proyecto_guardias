@@ -191,6 +191,21 @@
         /**
          * Actualiza una solicitud ya existente.
          */
+        public function actualizarSolicitud($idSolicitud, $motivo, $descripcion, $comentario) {
+            $sql = "UPDATE Solicitud SET id_Motivo = ?, descripcion_solicitud = ?, comentario_material = ? WHERE num = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("issi", $motivo, $descripcion, $comentario, $idSolicitud);
+            return $consulta->execute();
+        }
 
+        /**
+         * 
+         */
+        public function eliminarArchivo($idArchivo) {
+            $sql = "DELETE FROM Archivo WHERE id = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idArchivo);
+            return $consulta->execute();
+        }
 
     }

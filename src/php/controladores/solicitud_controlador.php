@@ -1,4 +1,4 @@
-<!-- AUTOR: ANTONIO MANUEL FIGUEROA PINILLA -->
+<!-- AUTOR: LEANDRO JOSÉ PANIAGUA BALBUENA Y ANTONIO MANUEL FIGUEROA PINILLA -->
 <?php
     require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
     require_once RUTA_MODELOS . 'curso.php';
@@ -83,7 +83,7 @@
         }
 
         /**
-         * Carga los datos de la solicitud
+         * Carga los datos de la solicitud que un usuario desea modificar.
          */
         public function cargarModificarSolicitud() {
             // Recogemos los datos de la URL
@@ -117,13 +117,19 @@
             // Obtenemos archivos asociados
             $archivos = $this->solicitud->obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num);
 
-            return [
-                'vista' => 'formmodsolicitud',
-                'solicitud' => $solicitud,
-                'horasSeleccionadas' => $horasSeleccionadas,
-                'motivos' => $motivos,
-                'archivos' => $archivos
-            ];
+            return ['vista' => 'formmodsolicitud', 'solicitud' => $solicitud, 'horasSeleccionadas' => $horasSeleccionadas, 'motivos' => $motivos, 'archivos' => $archivos];
+        }
+
+        /**
+         * Realiza la eliminación de un archivo en el servidor.
+         * Se ejecuta en el momento en que se hace una modificación de una solicitud que requiere de la eliminación de un archivo.
+         */
+        private function eliminarArchivoFisico($archivo) {
+            $ruta = RUTA_PROYECTO.'src/subidas/'.$archivo['ruta_archivo'].'/'. $archivo['nombre_generado'].'.'.$archivo['tipo_archivo'];
+
+            if (file_exists($ruta)) {
+                unlink($ruta);
+            }
         }
 
         /**
@@ -148,29 +154,51 @@
                     return;
                 }
 
-                // Actualizar horas seleccionadas
-                $this->solicitud->actualizarHorasSolicitud($idSolicitud, $horas);
-
                 // Eliminar archivos marcados
                 if (!empty($_POST['archivos_a_eliminar'])) {
-                    foreach ($_POST['archivos_a_eliminar'] as $idArchivo) {
-                        $this->solicitud->eliminarArchivo(intval($idArchivo));
+                    foreach ($_POST['archivos_a_eliminar'] as $archivoInfo) {
+                        $idArchivo = intval($archivoInfo['id']);
+                        $datosArchivo = [
+                            'ruta_archivo' => $archivoInfo['ruta'],
+                            'nombre_generado' => $archivoInfo['nombre'],
+                            'tipo_archivo' => $archivoInfo['tipo']
+                        ];
+
+                        $this->eliminarArchivoFisico($datosArchivo);
+                        $this->solicitud->eliminarArchivo($idArchivo);
                     }
                 }
 
-                // Guardar archivos nuevos (si llegan)
-                if (!empty($_FILES['justificantes']) && $_FILES['justificantes']['error'][0] !== UPLOAD_ERR_NO_FILE) {
-                    $this->solicitud->guardarArchivos($idSolicitud, $_FILES['justificantes'], 'justificante');
-                }
+                // Subir archivos nuevos (si llegan)
+                if (!empty($_FILES['justificantes']) && $_FILES['justificantes']['error'][0] !== UPLOAD_ERR_NO_FILE ||
+                    !empty($_FILES['materiales']) && $_FILES['materiales']['error'][0] !== UPLOAD_ERR_NO_FILE) {
+                    
+                    $archivosSubidos = $this->subirArchivosSolicitud($_FILES);
 
-                if (!empty($_FILES['materiales']) && $_FILES['materiales']['error'][0] !== UPLOAD_ERR_NO_FILE) {
-                    $this->solicitud->guardarArchivos($idSolicitud, $_FILES['materiales'], 'material');
-                }
+                    // Insertar justificantes en BD
+                    foreach ($archivosSubidos['justificantes'] as $infoArchivo) {
+                        $extension = pathinfo($infoArchivo['nombreOriginal'], PATHINFO_EXTENSION);
+                        $nombreOriginal = pathinfo($infoArchivo['nombreOriginal'], PATHINFO_FILENAME);
+                        $nombreGenerado = pathinfo($infoArchivo['nombreGenerado'], PATHINFO_FILENAME);
+                        $tipoArchivo = 'justificantes';
+                        $rutaRelativa = RUTA_PROYECTO . 'src/subidas/justificantes/';
+                        $this->solicitud->insertarArchivo($idUsuario, null, $idSolicitud, $nombreOriginal, $nombreGenerado, $extension, $tipoArchivo, $rutaRelativa);
+                    }
 
+                    // Insertar materiales en BD
+                    foreach ($archivosSubidos['materiales'] as $infoArchivo) {
+                        $extension = pathinfo($infoArchivo['nombreOriginal'], PATHINFO_EXTENSION);
+                        $nombreOriginal = pathinfo($infoArchivo['nombreOriginal'], PATHINFO_FILENAME);
+                        $nombreGenerado = pathinfo($infoArchivo['nombreGenerado'], PATHINFO_FILENAME);
+                        $tipoArchivo = 'materiales';
+                        $rutaRelativa = RUTA_PROYECTO . 'src/subidas/material/';
+                        $this->solicitud->insertarArchivo($idUsuario, null, $idSolicitud, $nombreOriginal, $nombreGenerado, $extension, $tipoArchivo, $rutaRelativa);
+                    }
+                }
 
                 return 'avisoexito';
             } else {
-                return  'inicio';
+                return 'saludo';
             }
         }
 
