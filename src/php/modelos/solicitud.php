@@ -191,10 +191,14 @@
         /**
          * Actualiza una solicitud ya existente.
          */
-        public function actualizarSolicitud($idSolicitud, $motivo, $descripcion, $comentario) {
-            $sql = "UPDATE Solicitud SET id_Motivo = ?, descripcion_solicitud = ?, comentario_material = ? WHERE num = ?";
+        public function actualizarSolicitud($idUsuario, $fechaPresentacion, $numSolicitud, $motivo, $descripcion, $comentario) {
+            $sql = "UPDATE Solicitud 
+                    SET id_Motivo = ?, descripcion_solicitud = ?, comentario_material = ?
+                    WHERE id_Usuario = ? AND fecha_presentacion = ? AND num = ?";
+            
             $consulta = $this->conexion->prepare($sql);
-            $consulta->bind_param("issi", $motivo, $descripcion, $comentario, $idSolicitud);
+            $consulta->bind_param("issisi", $motivo, $descripcion, $comentario, $idUsuario, $fechaPresentacion, $numSolicitud);
+            
             return $consulta->execute();
         }
 

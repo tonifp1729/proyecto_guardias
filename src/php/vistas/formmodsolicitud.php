@@ -1,8 +1,8 @@
 <?php
-if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
-    header('Location: ../../index.php?accion=inicio');
-    exit;
-}
+    if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
+        header('Location: ../../index.php?accion=inicio');
+        exit;
+    }
 ?>
 <div class="container">
     <h1>Modificar Solicitud</h1>
@@ -65,10 +65,33 @@ if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         </div>
 
         <!-- Archivos actuales -->
-        <?php if (!empty($archivos)): ?>
+        <!-- Justificantes -->
+        <?php if (!empty($justificantes)): ?>
             <div class="grupo-form">
-                <h3>Archivos actuales:</h3>
-                <?php foreach ($archivos as $archivo): ?>
+                <h3>Justificantes:</h3>
+                <?php foreach ($justificantes as $archivo): ?>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="archivos_a_eliminar[<?= $archivo['id'] ?>]" value="1"> Eliminar
+                        </label>
+
+                        <input type="hidden" name="archivos_info[<?= $archivo['id'] ?>][ruta]" value="<?= htmlspecialchars($archivo['ruta_archivo']) ?>">
+                        <input type="hidden" name="archivos_info[<?= $archivo['id'] ?>][nombre]" value="<?= htmlspecialchars($archivo['nombre_generado']) ?>">
+                        <input type="hidden" name="archivos_info[<?= $archivo['id'] ?>][tipo]" value="<?= htmlspecialchars($archivo['tipo_archivo']) ?>">
+
+                        <a href="subidas/<?= htmlspecialchars($archivo['ruta_archivo']) ?>/<?= htmlspecialchars($archivo['nombre_generado']) ?>.<?= htmlspecialchars($archivo['tipo_archivo']) ?>" target="_blank">
+                            <?= htmlspecialchars($archivo['nombre_original']) ?>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Materiales -->
+        <?php if (!empty($materiales)): ?>
+            <div class="grupo-form">
+                <h3>Materiales:</h3>
+                <?php foreach ($materiales as $archivo): ?>
                     <div>
                         <label>
                             <input type="checkbox" name="archivos_a_eliminar[<?= $archivo['id'] ?>]" value="1"> Eliminar
@@ -99,7 +122,6 @@ if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
 
         <button type="submit">Guardar Cambios</button>
     </form>
-
     <?php if (isset($error)): ?>
         <div class="mensaje-error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>

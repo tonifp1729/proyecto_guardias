@@ -86,12 +86,10 @@
          * Carga los datos de la solicitud que un usuario desea modificar.
          */
         public function cargarModificarSolicitud() {
-            // Recogemos los datos de la URL
             $idUsuario = $_GET['id'] ?? null;
             $fechaPresentacion = $_GET['fecha'] ?? null;
             $num = $_GET['num'] ?? null;
 
-            // Validamos que tengamos lo necesario
             if (!$idUsuario || !$fechaPresentacion || !$num) {
                 return [
                     'vista' => 'error',
@@ -99,7 +97,6 @@
                 ];
             }
 
-            // Obtenemos la solicitud
             $solicitud = $this->solicitud->obtenerSolicitud($idUsuario, $fechaPresentacion, $num);
             if (!$solicitud) {
                 return [
@@ -108,16 +105,15 @@
                 ];
             }
 
-            // Obtenemos las horas seleccionadas
             $horasSeleccionadas = $this->solicitud->obtenerHorasDeSolicitud($idUsuario, $fechaPresentacion, $num);
-
-            // Obtenemos los motivos disponibles
             $motivos = $this->solicitud->obtenerMotivos();
-
-            // Obtenemos archivos asociados
             $archivos = $this->solicitud->obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num);
 
-            return ['vista' => 'formmodsolicitud', 'solicitud' => $solicitud, 'horasSeleccionadas' => $horasSeleccionadas, 'motivos' => $motivos, 'archivos' => $archivos];
+            // Clasificamos los archivos por tipo de ruta
+            $justificantes = array_filter($archivos, fn($archivo) => $archivo['ruta_archivo'] === 'justificantes');
+            $materiales = array_filter($archivos, fn($archivo) => $archivo['ruta_archivo'] === 'materiales');
+
+            return ['vista' => 'formmodsolicitud', 'solicitud' => $solicitud, 'horasSeleccionadas' => $horasSeleccionadas, 'motivos' => $motivos, 'justificantes' => $justificantes, 'materiales' => $materiales];
         }
 
         /**
@@ -147,11 +143,6 @@
 
                 // Actualizar datos básicos de la solicitud
                 $resultado = $this->solicitud->actualizarSolicitud($idUsuario, $fechaPresentacion, $numSolicitud, $motivo, $descripcion, $comentario);
-
-                if (!$resultado) {
-                    echo "Error al actualizar la solicitud.";
-                    return;
-                }
 
                 // Eliminar archivos marcados
                 if (!empty($_POST['archivos_a_eliminar'])) {
