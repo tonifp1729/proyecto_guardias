@@ -391,7 +391,6 @@
          * 
          * @return string - Devuelve la vista 'avisoexito' si la eliminación fue realizada con éxito.
          */
-
         public function eliminarSolicitud() {
             $idUsuario = $_GET['id'] ?? null;
             $fechaPresentacion = $_GET['fecha'] ?? null;
