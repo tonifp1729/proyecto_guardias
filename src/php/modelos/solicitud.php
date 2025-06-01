@@ -52,9 +52,7 @@
          * Comprobamos la existencia de solapamiento con entre las solicitudes presentadas
          */
         public function existeSolapamiento($idUsuario, $fechaInicio, $fechaFin) {
-            $sql = "SELECT COUNT(*) as total FROM Solicitud 
-                    WHERE id_Usuario = ? 
-                    AND ((fecha_inicio_ausencia <= ? AND fecha_fin_ausencia >= ?))";
+            $sql = "SELECT COUNT(*) as total FROM Solicitud WHERE id_Usuario = ? AND estado != 'r' AND ((fecha_inicio_ausencia <= ? AND fecha_fin_ausencia >= ?))";
 
             $consulta = $this->conexion->prepare($sql);
             $consulta->bind_param("iss", $idUsuario, $fechaFin, $fechaInicio);
@@ -205,11 +203,14 @@
         /**
          * 
          */
-        public function eliminarArchivo($idArchivo) {
-            $sql = "DELETE FROM Archivo WHERE id = ?";
+        public function eliminarSolicitud($idUsuario, $fechaPresentacion, $numSolicitud) {
+            $sql = "DELETE FROM Solicitud WHERE id_Usuario = ? AND fecha_presentacion = ? AND num = ?";
             $consulta = $this->conexion->prepare($sql);
-            $consulta->bind_param("i", $idArchivo);
-            return $consulta->execute();
+            $consulta->bind_param("isi", $idUsuario, $fechaPresentacion, $numSolicitud);
+            $resultado = $consulta->execute();
+            $consulta->close();
+
+            return $resultado;
         }
 
     }

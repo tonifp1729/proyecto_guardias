@@ -34,10 +34,11 @@
                         ?>
                     </td>
                     <td>
-                        <?php if ($estado === 'a'): ?>
-                            <a href="index.php?accion=irModificarSolicitud&id=<?= $_SESSION['id'] ?>&fecha=<?= $solicitud['fecha_presentacion'] ?>&num=<?= $solicitud['num'] ?>">Mostrar</a>
+                        <?php if ($estado === 'a' || $estado === 'r'): ?>
+                            <a href="index.php?accion=irVerSolicitud&id=<?= $_SESSION['id'] ?>&fecha=<?= $solicitud['fecha_presentacion'] ?>&num=<?= $solicitud['num'] ?>">Mostrar</a>
                         <?php else: ?>
                             <a href="index.php?accion=irModificarSolicitud&id=<?= $_SESSION['id'] ?>&fecha=<?= $solicitud['fecha_presentacion'] ?>&num=<?= $solicitud['num'] ?>">Modificar</a>
+                            <a href="index.php?accion=borrarSolicitud&id=<?= $_SESSION['id'] ?>&fecha=<?= $solicitud['fecha_presentacion'] ?>&num=<?= $solicitud['num'] ?>" class="enlace-borrar">Borrar</a>
                         <?php endif; ?>
                     </td>
                 </tr>

@@ -141,4 +141,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorServidorDiv.remove();
             }
         }
+
+    //Solicitud de confirmación antes de borrar solicitud
+    const enlacesBorrar = document.querySelectorAll('.enlace-borrar');
+    enlacesBorrar.forEach(enlace => {
+        enlace.addEventListener('click', (e) => {
+            const confirmar = confirm('¿Estás seguro de que quieres borrar esta solicitud? Esta acción no se puede deshacer.');
+            if (!confirmar) {
+                e.preventDefault();
+            }
+        });
+    });
+
 });

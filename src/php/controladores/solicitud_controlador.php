@@ -83,27 +83,37 @@
         }
 
         /**
+         * Para mostrar los datos de una solicitud específica sin posibilidad de modificación por medio de formulario.
+         * @return
+         */
+        public function cargarVerSolicitud() {
+            $idUsuario = $_GET['id'] ?? null;
+            $fechaPresentacion = $_GET['fecha'] ?? null;
+            $num = $_GET['num'] ?? null;
+
+            $solicitud = $this->solicitud->obtenerSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            $horasSeleccionadas = $this->solicitud->obtenerHorasDeSolicitud($idUsuario, $fechaPresentacion, $num);
+            $motivos = $this->solicitud->obtenerMotivos();
+            $archivos = $this->solicitud->obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            // Clasificamos los archivos por tipo de ruta
+            $justificantes = array_filter($archivos, fn($archivo) => $archivo['ruta_archivo'] === 'justificantes');
+            $materiales = array_filter($archivos, fn($archivo) => $archivo['ruta_archivo'] === 'materiales');
+
+            return ['vista' => 'versolicitud', 'solicitud' => $solicitud, 'horasSeleccionadas' => $horasSeleccionadas, 'motivos' => $motivos, 'justificantes' => $justificantes, 'materiales' => $materiales];
+        }
+
+        /**
          * Carga los datos de la solicitud que un usuario desea modificar.
+         * @return
          */
         public function cargarModificarSolicitud() {
             $idUsuario = $_GET['id'] ?? null;
             $fechaPresentacion = $_GET['fecha'] ?? null;
             $num = $_GET['num'] ?? null;
 
-            if (!$idUsuario || !$fechaPresentacion || !$num) {
-                return [
-                    'vista' => 'error',
-                    'error' => 'Faltan datos para modificar la solicitud.'
-                ];
-            }
-
             $solicitud = $this->solicitud->obtenerSolicitud($idUsuario, $fechaPresentacion, $num);
-            if (!$solicitud) {
-                return [
-                    'vista' => 'error',
-                    'error' => 'No se ha encontrado la solicitud especificada.'
-                ];
-            }
 
             $horasSeleccionadas = $this->solicitud->obtenerHorasDeSolicitud($idUsuario, $fechaPresentacion, $num);
             $motivos = $this->solicitud->obtenerMotivos();
@@ -149,12 +159,7 @@
                     foreach ($_POST['archivos_a_eliminar'] as $idArchivo => $valor) {
                         if ($valor == 1 && isset($_POST['archivos_info'][$idArchivo])) {
                             $archivoInfo = $_POST['archivos_info'][$idArchivo];
-
-                            $datosArchivo = [
-                                'ruta_archivo' => $archivoInfo['ruta'],
-                                'nombre_generado' => $archivoInfo['nombre'],
-                                'tipo_archivo' => $archivoInfo['tipo']
-                            ];
+                            $datosArchivo = ['ruta_archivo' => $archivoInfo['ruta'], 'nombre_generado' => $archivoInfo['nombre'], 'tipo_archivo' => $archivoInfo['tipo']];
 
                             $this->eliminarArchivoFisico($datosArchivo);
                             $this->solicitud->eliminarArchivo($idArchivo);
@@ -381,16 +386,33 @@
         }
 
         /**
-         * Elimina una solicitud de la base de datos.
-         *
+         * Elimina una solicitud de la base de datos, retirando los archivos asociados del servidor durante el proceso.
+         * Así evitamos la existencia de archivos que no estén relacionados a una solicitud.
+         * 
          * @return string - Devuelve la vista 'avisoexito' si la eliminación fue realizada con éxito.
          */
-        public function borrarSolicitud() {
-            $idSolicitud = $_GET['id'];
 
-            $this->curso->eliminarSolicitud($idSolicitud);
+        public function eliminarSolicitud() {
+            $idUsuario = $_GET['id'] ?? null;
+            $fechaPresentacion = $_GET['fecha'] ?? null;
+            $num = $_GET['num'] ?? null;
 
-            return 'avisoexito';
+            //Obtener archivos relacionados
+            $archivos = $this->solicitud->obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            //Eliminar físicamente los archivos del servidor
+            foreach ($archivos as $archivo) {
+                $this->eliminarArchivoFisico($archivo);
+            }
+
+            //Eliminar la solicitud
+            $exito = $this->solicitud->eliminarSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            if ($exito) {
+                return 'avisoexito';
+            } else {
+                return 'saludo';
+            }
         }
 
     }

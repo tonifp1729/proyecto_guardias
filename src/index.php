@@ -199,6 +199,22 @@
 
             break;
 
+        case 'irVerSolicitud':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->cargarVerSolicitud();
+            $controlador->cargarVista($datos['vista'], $datos);
+
+            break;
+
+        case 'borrarSolicitud':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $vista = $solicitudControlador->eliminarSolicitud();
+            $controlador->cargarVista($vista);
+
+            break;
+
         case 'denegarAcceso':
 
             $vista = 'accesodenegadonocurso';
