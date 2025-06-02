@@ -2,7 +2,6 @@
 <?php
     require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
     require_once RUTA_MODELOS . 'curso.php';
-    require_once RUTA_MODELOS . 'solicitud.php';
 
     class Curso_controlador {
 
@@ -10,7 +9,6 @@
 
         public function __construct() {
             $this->curso = new Curso();
-            $this->solicitud = new Solicitud();
         }
 
         /**

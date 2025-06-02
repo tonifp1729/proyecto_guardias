@@ -27,14 +27,6 @@
 
             break;
 
-        case 'cursoActual':
-
-            $cursoControlador = new Curso_controlador();
-            $datos = $cursoControlador->mostrarCursoActual();
-            $controlador->cargarVista($datos['accion'], $datos);
-
-            break;
-
         case 'logout':
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -211,6 +203,35 @@
 
             $solicitudControlador = new Solicitud_controlador();
             $vista = $solicitudControlador->eliminarSolicitud();
+            $controlador->cargarVista($vista);
+
+            break;
+
+        case 'cursoActual':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->obtenerSolicitudesGestion();
+
+            if (is_array($datos)) {
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
+
+            break;
+
+        case 'irGestionarSolicitud':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->cargarGestionarSolicitud();
+            $controlador->cargarVista($datos['vista'], $datos);
+
+            break;
+
+        case 'gestionSolicitud':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $vista = $solicitudControlador->gestionarEstado();
             $controlador->cargarVista($vista);
 
             break;

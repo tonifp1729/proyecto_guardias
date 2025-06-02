@@ -10,6 +10,37 @@
         }
 
         /**
+         * 
+         */
+        public function obtenerSolicitudesPorCurso($idCurso) {
+            $sql = "SELECT s.id_Usuario, s.num, s.fecha_presentacion, s.fecha_inicio_ausencia, s.fecha_fin_ausencia, s.estado, s.descripcion_solicitud, s.comentario_material, m.nombre AS motivo, u.nombre AS nombre_usuario, u.apellidos AS apellidos_usuario FROM Solicitud s INNER JOIN Motivo m ON s.id_Motivo = m.id INNER JOIN Usuario u ON s.id_Usuario = u.id WHERE s.id_Curso = ? AND s.fecha_fin_ausencia > CURDATE() ORDER BY s.fecha_presentacion DESC";
+
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idCurso);
+            $consulta->execute();
+            $resultado = $consulta->get_result();
+            $solicitudes = [];
+
+            while ($solicitud = $resultado->fetch_assoc()) {
+                $solicitudes[] = $solicitud;
+            }
+
+            $consulta->close();
+
+            return $solicitudes;
+        }
+
+        /**
+         * Modifica el valor del estado
+         */
+        public function actualizarEstado($idUsuario, $fechaPresentacion, $num, $estado) {
+            $sql = "UPDATE Solicitud SET estado = ? WHERE id_Usuario = ? AND fecha_presentacion = ? AND num = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param('sisi', $estado, $idUsuario, $fechaPresentacion, $num);
+            return $consulta->execute();
+        }
+
+        /**
          * Obtenemos las solicitudes de un usuario en concreto durante un curso específico en orden decreciente por la fecha de presentación.
          */
         public function obtenerSolicitudesPorUsuarioYCurso($idUsuario, $idCurso) {

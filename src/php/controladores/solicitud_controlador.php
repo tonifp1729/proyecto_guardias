@@ -1,8 +1,8 @@
 <!-- AUTOR: LEANDRO JOSÉ PANIAGUA BALBUENA Y ANTONIO MANUEL FIGUEROA PINILLA -->
 <?php
     require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
-    require_once RUTA_MODELOS . 'curso.php';
     require_once RUTA_MODELOS . 'solicitud.php';
+    require_once RUTA_MODELOS . 'curso.php';
 
     class Solicitud_controlador {
 
@@ -17,12 +17,12 @@
         /**
          * Para disponer del identificador adecuado para las vistas del administrador.
          */
-        function generarIdentificadorParaAdministrador($fecha, $num) {
+        function generarIdentificadorParaAdministrador($idUsuario ,$fecha, $num) {
 
             $fechaFormateada = date("Ymd", strtotime($fecha));
             $numFormateado = str_pad($num, 2, "0", STR_PAD_LEFT);
 
-            $identificadorSolicitud = $_SESSION['id'] . "_" . $fechaFormateada . "_" . $numFormateado;
+            $identificadorSolicitud = $idUsuario . "_" . $fechaFormateada . "_" . $numFormateado;
 
             return $identificadorSolicitud;
         }
@@ -66,6 +66,72 @@
             }
 
             return ['vista' => 'listarsolicitudes', 'cursoActivo' => $idCursoActivo, 'solicitudes' => $solicitudes];
+        }
+
+
+        /**
+         * Obtenemos las solicitudes para su gestión por parte del administrador
+         */
+        public function obtenerSolicitudesGestion() {
+            if (!isset($_SESSION['idCursoActivo'])) {
+                session_start();
+            }
+
+            if ($_SESSION['rol'] !== 'A' && $_SESSION['rol'] !== 'M') {
+                header('Location: index.php?accion=inicio');
+                exit;
+            }
+
+            $idCursoActivo = $_SESSION['idCursoActivo'];
+
+            $datosCurso = $this->curso->obtenerCurso($idCursoActivo);
+            $solicitudes = $this->solicitud->obtenerSolicitudesPorCurso($idCursoActivo);
+
+            
+            if ($_SESSION['rol'] === 'M') {
+                $solicitudes = array_filter($solicitudes, function ($solicitud) {
+                    return $solicitud['id_Usuario'] !== $_SESSION['id'];
+                });
+            }
+
+            foreach ($solicitudes as &$solicitud) { 
+                $solicitud['identificador'] = $this->generarIdentificadorParaAdministrador($solicitud['id_Usuario'], $solicitud['fecha_presentacion'], $solicitud['num']);
+            }
+
+            return ['vista' => 'cursoactual', 'curso' => $datosCurso, 'solicitudes' => $solicitudes];
+        }
+
+        /**
+         * Para mostrar los datos de una solicitud específica sin posibilidad de modificación por medio de formulario.
+         * @return
+         */
+        public function cargarGestionarSolicitud() {
+            $idUsuario = $_GET['id'] ?? null;
+            $fechaPresentacion = $_GET['fecha'] ?? null;
+            $num = $_GET['num'] ?? null;
+
+            $solicitud = $this->solicitud->obtenerSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            $horasSeleccionadas = $this->solicitud->obtenerHorasDeSolicitud($idUsuario, $fechaPresentacion, $num);
+            $motivos = $this->solicitud->obtenerMotivos();
+            $archivos = $this->solicitud->obtenerArchivosDeSolicitud($idUsuario, $fechaPresentacion, $num);
+
+            // Clasificamos los archivos por tipo de ruta
+            $justificantes = array_filter($archivos, fn($archivo) => $archivo['ruta_archivo'] === 'justificantes');
+            $materiales = array_filter($archivos, fn($archivo) => $archivo['ruta_archivo'] === 'materiales');
+
+            return ['vista' => 'gestionarsolicitud', 'solicitud' => $solicitud, 'horasSeleccionadas' => $horasSeleccionadas, 'motivos' => $motivos, 'justificantes' => $justificantes, 'materiales' => $materiales];
+        }
+        
+        public function gestionarEstado() {
+            $idUsuario = $_GET['id'] ?? null;
+            $fechaPresentacion = $_GET['fecha'] ?? null;
+            $num = $_GET['num'] ?? null;
+            $estado = $_GET['estado'] ?? null;
+
+            $this->solicitud->actualizarEstado($idUsuario, $fechaPresentacion, $num, $estado);
+
+            return 'avisoexito';
         }
 
         /**

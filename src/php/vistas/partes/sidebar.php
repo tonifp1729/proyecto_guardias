@@ -15,18 +15,24 @@
                     case 'C': //USUARIO COMÚN
                         if (isset($_SESSION['idCursoActivo'])) {
                             echo '<li><a href="index.php?accion=listadoSolicitudesPropias">Solicitudes presentadas</a></li>';
-                            echo '<li><a href="index.php?accion=nuevaSolicitud">Nueva solicitud</a></li>';   
+                            echo '<li><a href="index.php?accion=nuevaSolicitud">Nueva solicitud</a></li>';
                         }
                         break;
                     case 'A': //USUARIO ADMINISTRADOR
-                        echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';
+                        if (isset($_SESSION['idCursoActivo'])) {
+                            echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';
+                        }
                         echo '<li><a href="index.php?accion=nuevoCurso">Iniciar nuevo curso</a></li>';
                         echo '<li><a href="index.php?accion=listadoCursos">Registro de cursos</a></li>';
                         echo '<li><a href="index.php?accion=listadoUsuarios">Listado de usuarios</a></li>';
                         break;
                     case 'M': //USUARIO MODERADOR
-                        echo '<li><a href="#">Moderar solicitudes</a></li>';
-                        echo '<li><a href="#">Historial de moderación</a></li>';
+                        if (isset($_SESSION['idCursoActivo'])) {
+                            echo '<li><a href="index.php?accion=listadoSolicitudesPropias">Solicitudes presentadas</a></li>';
+                            echo '<li><a href="index.php?accion=nuevaSolicitud">Nueva solicitud</a></li>';
+                            echo '<li><a href="index.php?accion=cursoActual">Curso activo</a></li>';
+                        }
+
                         break;
                 }
             }
