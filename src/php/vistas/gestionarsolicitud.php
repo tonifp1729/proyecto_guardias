@@ -1,3 +1,4 @@
+<!-- VISTA CON LAS OPCIONES DE GESTION DE UNA SOLICITUD -->
 <?php
     if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         header('Location: ../../index.php?accion=inicio');

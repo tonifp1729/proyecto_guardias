@@ -220,6 +220,19 @@
 
             break;
 
+        case 'verCurso':
+
+            $solicitudControlador = new Solicitud_controlador();
+            $datos = $solicitudControlador->obtenerSolicitudesCurso();
+
+            if (is_array($datos)) {
+                $controlador->cargarVista($datos['vista'], $datos);
+            } else {
+                $controlador->cargarVista($datos);
+            }
+
+            break;
+
         case 'irGestionarSolicitud':
 
             $solicitudControlador = new Solicitud_controlador();

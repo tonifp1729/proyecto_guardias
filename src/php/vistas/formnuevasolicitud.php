@@ -1,4 +1,4 @@
-<!-- VISTA DEL FORMULARIO PARA MODIFICAR USUARIO --------------------------------------------------------------------------------->
+<!-- VISTA DEL FORMULARIO DE NUEVA SOLICITUD --------------------------------------------------------------------------------->
 <?php
     if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         header('Location: ../../index.php?accion=inicio');

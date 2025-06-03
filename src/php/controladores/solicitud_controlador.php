@@ -102,6 +102,32 @@
         }
 
         /**
+         * Obtenemos las solicitudes para su gestión por parte del administrador
+         */
+        public function obtenerSolicitudesCurso() {
+
+            if (!isset($_SESSION['id'])) {
+                session_start();
+            }
+
+            if ($_SESSION['rol'] !== 'A') {
+                header('Location: index.php?accion=inicio');
+                exit;
+            }
+
+            $idCurso = $_GET['id'];
+
+            $datosCurso = $this->curso->obtenerCurso($idCurso);
+            $solicitudes = $this->solicitud->obtenerSolicitudesPorCurso($idCurso);
+
+            foreach ($solicitudes as &$solicitud) { 
+                $solicitud['identificador'] = $this->generarIdentificadorParaAdministrador($solicitud['id_Usuario'], $solicitud['fecha_presentacion'], $solicitud['num']);
+            }
+
+            return ['vista' => 'cargarcurso', 'curso' => $datosCurso, 'solicitudes' => $solicitudes];
+        }
+
+        /**
          * Para mostrar los datos de una solicitud específica sin posibilidad de modificación por medio de formulario.
          * @return
          */

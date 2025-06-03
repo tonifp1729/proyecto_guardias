@@ -1,3 +1,4 @@
+<!-- VISTA DEL FORMULARIO DE MODICICACION DE UNA SOLICITUD ------------------------------------------------------------------------->
 <?php
     if (!defined('ACCESO_PERMITIDO') || !isset($_SESSION['nombre'])) {
         header('Location: ../../index.php?accion=inicio');
