@@ -6,8 +6,8 @@
     }
 ?>
 <div class="container">
-    <h1><?php echo htmlspecialchars($curso['anoAcademico']); ?></h1>
     <form action="index.php?accion=modificarCurso" method="POST" class="form-curso">
+        <h1><?php echo htmlspecialchars($curso['anoAcademico']); ?></h1>
         <!-- Campo oculto con el id que necesitamos por el envío post -->
         <input type="hidden" name="idCurso" value="<?php echo htmlspecialchars($curso['idCurso']); ?>">
         <div class="form-group">

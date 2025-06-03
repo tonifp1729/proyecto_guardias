@@ -6,8 +6,8 @@
     }
 ?>
 <div class="container">
-    <h1>Nueva Solicitud de Ausencia</h1>
     <form action="index.php?accion=crearSolicitud" method="POST" class="form-solicitud" enctype="multipart/form-data">
+        <h1>Nueva Solicitud de Ausencia</h1>
         <div class="grupo-form">
             <label for="fecha_inicio_ausencia">Fecha de Inicio de Ausencia:</label>
             <input type="date" id="fecha_inicio_ausencia" name="fecha_inicio_ausencia" required>

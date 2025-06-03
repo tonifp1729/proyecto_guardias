@@ -72,6 +72,14 @@ body {
     background-color: var(--color-secundario);
 }
 
+/* Contenedor general para centrar */
+.container {
+    padding-left: calc(var(--ancho-sidebar) + 40px); /* Para evitar que se solape con el sidebar */
+    padding-right: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
 /* Botón de cerrar sesión */
 .logout a {
     display: block;
@@ -235,13 +243,431 @@ form button[type="submit"]:disabled {
     color: white;
 }
 
+/* Vista del formmodusuario */
+.form-usuario {
+    max-width: 500px;
+    width: 90%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.form-usuario .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-usuario label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-usuario input[type="email"],
+.form-usuario select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-usuario button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #28a745;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-usuario button:hover {
+    background-color: #218838;
+}
+
+/* Vista formnuevocurso */
+.form-curso {
+    max-width: 500px;
+    width: 90%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.form-curso h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.form-curso .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-curso label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.form-curso input[type="date"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-curso button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007BFF;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-curso button:hover {
+    background-color: #0056b3;
+}
+
+/* Vista formnuevasolicitud */
+.form-solicitud {
+    background-color: var(--color-fondo-claro);
+    padding: var(--padding-general);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 40px auto;
+    border-top: 5px solid var(--color-primario);
+}
+
+.form-solicitud h1 {
+    font-size: 24px;
+    color: var(--color-texto);
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.grupo-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-solicitud select,
+.form-solicitud textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid var(--color-borde);
+    border-radius: 5px;
+    background-color: var(--color-fondo);
+    box-sizing: border-box;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.form-solicitud select:focus,
+.form-solicitud textarea:focus {
+    border-color: var(--color-secundario);
+    outline: none;
+}
+
+#grupoHoras h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: var(--color-texto);
+}
+
+#grupoHoras label {
+    font-size: 14px;
+    margin: 5px 0;
+    color: var(--color-texto);
+    display: block;
+    cursor: pointer;
+}
+
+.form-solicitud input[type="file"] {
+    padding: 8px;
+    background-color: var(--color-fondo);
+    border: 1px solid var(--color-borde);
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Vistas de listado de solicitudes */
+.listado {
+    background-color: var(--color-fondo-claro);
+    padding: var(--padding-general);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    border-top: 5px solid var(--color-secundario);
+}
+
+.listado h2 {
+    font-size: 24px;
+    color: var(--color-texto);
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Tabla */
+.listado table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+}
+
+.listado thead {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.listado thead th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.listado tbody td {
+    padding: 12px;
+    border-bottom: 1px solid var(--color-borde);
+    font-size: 14px;
+    color: var(--color-texto);
+}
+
+.listado tbody tr:hover {
+    background-color: var(--color-fondo);
+}
+
+.listado td:nth-child(4) {
+    font-size: 18px;
+    text-align: center;
+}
+
+.listado td:last-child {
+    white-space: nowrap;
+}
+
+.listado a {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 6px 12px;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 5px;
+    color: white;
+    background-color: var(--color-primario);
+    transition: background-color 0.3s ease;
+}
+
+.listado a:hover {
+    background-color: var(--color-secundario);
+}
+
+.enlace-borrar {
+    background-color: var(--color-error);
+}
+
+.enlace-borrar:hover {
+    background-color: #c0392b;
+}
+
+/* Vistas gestion-solicitud */
+.gestion-solicitud {
+    background-color: var(--color-fondo-claro);
+    padding: var(--padding-general);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 40px auto;
+    border-top: 5px solid var(--color-secundario);
+    box-sizing: border-box;
+}
+
+.gestion-solicitud h1 {
+    font-size: 24px;
+    color: var(--color-texto);
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.gestion {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.tabla-solicitudes {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.tabla-solicitudes th,
+.tabla-solicitudes td {
+    padding: 12px 15px;
+    border: 1px solid var(--color-borde);
+    text-align: left;
+}
+
+.tabla-solicitudes th {
+    background-color: var(--color-primario);
+    color: white;
+    font-weight: 600;
+}
+
+.tabla-solicitudes tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabla-solicitudes tr:hover {
+    background-color: #eef4fb;
+}
+
+.boton-accion {
+    padding: 8px 14px;
+    font-size: 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 6px;
+    transition: background-color 0.3s ease;
+    color: white;
+}
+
+.boton-aceptar,
+.boton-rechazar {
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+/* Botón Aceptar */
+.boton-aceptar {
+    background-color: #28a745;
+}
+
+.boton-aceptar:hover {
+    background-color: #218838;
+    transform: scale(1.03);
+}
+
+/* Botón Rechazar */
+.boton-rechazar {
+    background-color: #dc3545;
+}
+
+.boton-rechazar:hover {
+    background-color: #c82333;
+    transform: scale(1.03);
+}
+
+.boton-editar {
+    background-color: #007bff;
+}
+
+.boton-editar:hover {
+    background-color: #0056b3;
+}
+
+.filtro-solicitudes {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filtro-solicitudes select,
+.filtro-solicitudes input {
+    padding: 8px 12px;
+    border: 1px solid var(--color-borde);
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    box-sizing: border-box;
+}
+
+.filtro-solicitudes button {
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filtro-solicitudes button:hover {
+    background-color: var(--color-secundario);
+}
+
 /* Vista cursoactual */
 .curso-info {
-    background-color: #f0f8ff;
-    padding: 1rem;
+    background-color: var(--color-fondo-claro);
+    padding: var(--padding-general);
     border-radius: 10px;
-    margin-bottom: 2rem;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 40px auto;
+    border-left: 5px solid var(--color-secundario);
+    text-align: left;
+}
+
+.curso-info h1 {
+    color: var(--color-texto);
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.curso-info p {
+    font-size: 16px;
+    color: var(--color-texto);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.curso-info p strong {
+    color: var(--color-primario);
 }
 
 /* Vista de aviso para las acciones realizadas correctamente */

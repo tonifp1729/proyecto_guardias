@@ -6,8 +6,8 @@
     }
 ?>
 <div class="container">
-    <h1>Iniciar Nuevo Curso</h1>
     <form action="index.php?accion=iniciarCurso" method="POST" class="form-curso">
+        <h1>Iniciar Nuevo Curso</h1>
         <div class="form-group">
             <label for="fecha_inicio">Fecha de Inicio:</label>
             <input type="date" id="fecha_inicio" name="fecha_inicio" required>

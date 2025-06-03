@@ -5,7 +5,7 @@
         exit;
     }
 ?>
-<div id="listado-solicitudes">
+<div class="listado">
     <h1>Listado de solicitudes de <?= $_SESSION['nombre'] ?></h1>
     <table>
         <thead>

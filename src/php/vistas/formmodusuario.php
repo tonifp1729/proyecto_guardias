@@ -6,8 +6,8 @@
     }
 ?>
 <div class="container">
-    <h1>Modificar Usuario</h1>
     <form action="index.php?accion=modificarUsuario" method="POST" class="form-usuario">
+        <h1>Modificar Usuario</h1>
         <input type="hidden" name="idUsuario" value="<?php echo htmlspecialchars($usuario['id']); ?>">
         <div class="form-group">
             <label for="correo">Correo electrónico:</label>
