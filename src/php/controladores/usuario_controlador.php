@@ -3,14 +3,39 @@
     require_once RUTA_MODELOS . 'usuario.php';
     require_once RUTA_CONFIGURACION . 'config.php';
 
+    
+    /**
+     * Controlador encargado de la gestión de usuarios. 
+     * Autenticación con Google, obtención, modificación y eliminación de usuarios.
+     * 
+     * @author Antonio Manuel Figueroa Pinilla
+     */
     class Usuario_controlador {
 
+        /**
+         * Instancia del modelo Usuario para gestionar las operaciones relacionadas con los usuarios.
+         * @var Usuario
+         */
         private $usuario;
 
+        /**
+         * Constructor de la clase. Se instancia el modelo Usuario.
+         */
         public function __construct() {
             $this->usuario = new Usuario();
         }
 
+        /**
+         * Inicia sesión del usuario mediante Google.
+         * 
+         * - Si no se ha iniciado sesión, se inicia.
+         * - Si no hay código de autorización, se redirige al login de Google.
+         * - Si el usuario regresa con el código, se obtiene su perfil.
+         * - Si el correo no está registrado, se inserta.
+         * - Se guardan los datos necesarios en la variable de sesión.
+         * 
+         * @return string - Retorna la vista 'saludo' si el proceso es exitoso.
+         */
         public function inicioSesionGoogle() {
 
             if (session_status() === PHP_SESSION_NONE) {
@@ -72,13 +97,20 @@
             }
         }
 
+        /**
+         * Obtiene el listado completo de usuarios desde el modelo.
+         * 
+         * @return array Retorna un array con la vista a renderizar y los datos de los usuarios.
+         */
         public function obtenerUsuarios() {
             $usuarios = $this->usuario->listarUsuarios();
             return ['vista' => 'listarusuarios', 'usuarios' => $usuarios];
         }
 
         /**
-         * Se encarga de retornar todos los datos que se deben usar para cargar la vista de modificación de usuarios
+         * Carga los datos necesarios para mostrar el formulario de modificación de un usuario concreto.
+         * 
+         * @return array - Retorna un array con la vista, los datos del usuario y la lista de roles.
          */
         public function cargarModificarUsuario() {
             $idUsuario = $_GET['id'];
@@ -89,6 +121,16 @@
             return ['vista' => 'formmodusuario', 'usuario' => $prepararUsuario, 'roles' => $roles];
         }
 
+        /**
+         * Procesa la modificación de un usuario tras el envío del formulario.
+         * 
+         * - Verifica si se han enviado los datos por POST.
+         * - Valida campos obligatorios.
+         * - Comprueba formato del correo y que no esté duplicado.
+         * - Ejecuta la actualización y retorna la vista correspondiente.
+         * 
+         * @return array|string - Devuelve la vista con errores o la confirmación de éxito.
+         */
         public function modificarUsuario() {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -132,10 +174,11 @@
 
         /**
          * Elimina un usuario de la base de datos.
-         *
-         * Este método obtiene el ID del usuario desde la URL (`$_GET['id']`)
-         *
-         * @return string - Devuelve la acción 'listarusuarios' si el rol del usuario es de administrador y no se elimina o 'avisoexito' si la eliminación fue realizada con éxito.
+         * 
+         * - Si el usuario tiene rol de administrador, no se elimina.
+         * - Si es válido, se elimina y se muestra confirmación.
+         * 
+         * @return string - Vista que se mostrará tras la operación ('listarusuarios' o 'avisoexito').
          */
         public function borrarUsuario() {
             $idUsuario = $_GET['id'];

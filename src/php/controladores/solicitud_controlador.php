@@ -1,21 +1,51 @@
-<!-- AUTOR: LEANDRO JOSÉ PANIAGUA BALBUENA Y ANTONIO MANUEL FIGUEROA PINILLA -->
 <?php
     require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
     require_once RUTA_MODELOS . 'solicitud.php';
     require_once RUTA_MODELOS . 'curso.php';
 
+    /**
+     * Controlador encargado de la gestión de solicitudes en toda la aplicación. 
+     * 
+     * @author Leandro José Paniagua Balbuena
+     * @author Antonio Manuel Figueroa Pinilla
+     */
     class Solicitud_controlador {
 
+        /**
+         * Instancia del modelo Solicitud
+         * @var Solicitud
+         */
         private $solicitud;
+
+        /**
+         * Instancia del modelo Curso
+         * @var Curso
+         */
         private $curso;
 
+        /**
+         * Constructor de la clase. Se instancian los modelos Solicitud y Curso.
+         */
         public function __construct() {
             $this->solicitud = new Solicitud();
             $this->curso = new Curso();
         }
 
         /**
-         * Para disponer del identificador adecuado para las vistas del administrador.
+         * Genera un identificador único de solicitud para las vistas del administrador.
+         *
+         * El identificador resultante tiene el formato: `idUsuario_yyyymmdd_nn`, donde:
+         * - `idUsuario` es el identificador del usuario que presentó la solicitud.
+         * - `yyyymmdd` es la fecha de presentación sin guiones.
+         * - `nn` es el número de solicitud de ese día, con al menos dos dígitos (relleno con ceros a la izquierda si es necesario).
+         *
+         * Este identificador permite al administrador diferenciar solicitudes de distintos usuarios
+         * de forma precisa y ordenada en las interfaces de gestión.
+         *
+         * @param int|string $idUsuario - ID del usuario que presentó la solicitud.
+         * @param string $fecha - Fecha de presentación de la solicitud (formato reconocible por strtotime).
+         * @param int $num - Número de la solicitud presentada en ese día por el usuario.
+         * @return string - Identificador único con el formato `idUsuario_yyyymmdd_nn`.
          */
         function generarIdentificadorParaAdministrador($idUsuario ,$fecha, $num) {
 
@@ -28,7 +58,17 @@
         }
 
         /**
-         * Para disponer del identificador adecuado para vistas comunes.
+         * Genera un identificador único para una solicitud basada en su fecha de presentación y número.
+         *
+         * El identificador resultante tiene el siguiente formato: `yyyymmdd_nn`, donde:
+         * - `yyyymmdd` es la fecha de presentación sin guiones.
+         * - `nn` es el número de la solicitud con al menos dos dígitos (relleno con ceros a la izquierda si es necesario).
+         *
+         * Este identificador es útil para mostrar solicitudes de forma clara y ordenada en las vistas de usuario.
+         *
+         * @param string $fecha - Fecha de presentación de la solicitud (en formato reconocible por strtotime).
+         * @param int $num - Número de solicitud presentado ese día.
+         * @return string - Identificador único con el formato `yyyymmdd_nn`.
          */
         function generarIdentificador($fecha, $num) {
 
@@ -49,7 +89,7 @@
          * Al usuario común solo se le mostrarán las solicitudes presentadas en el curso actual. En caso de que
          * no haya uno activo, no se mostrará ninguna acción a realizar en la aplicación.
          * 
-         * @return
+         * @return array Array asociativo con los datos para cargar la vista 'listarsolicitudes'.
          */
         public function obtenerSolicitudesPropias() {
             if (!isset($_SESSION['id']) || !isset($_SESSION['idCursoActivo'])) {
@@ -70,7 +110,18 @@
 
 
         /**
-         * Obtenemos las solicitudes para su gestión por parte del administrador
+         * Obtiene y prepara las solicitudes del curso activo para su gestión,
+         * ya sea por parte del administrador o del moderador.
+         *
+         * Este método realiza las siguientes acciones:
+         * - Verifica que exista una sesión activa y que el rol sea válido ('A' o 'M').
+         * - Si el usuario no tiene permiso, redirige al inicio.
+         * - Recupera los datos del curso activo desde la sesión.
+         * - Obtiene las solicitudes asociadas al curso.
+         * - Si el usuario es moderador, filtra las solicitudes excluyendo las suyas propias.
+         * - Genera un identificador único para cada solicitud.
+         *
+         * @return array Array asociativo con los datos para cargar la vista 'cursoactual'.
          */
         public function obtenerSolicitudesGestion() {
             if (!isset($_SESSION['idCursoActivo'])) {
@@ -102,7 +153,13 @@
         }
 
         /**
-         * Obtenemos las solicitudes para su gestión por parte del administrador
+         * Obtiene las solicitudes asociadas a un curso específico para su gestión por parte del administrador.
+         *
+         * - Verifica que el usuario tenga una sesión activa y sea administrador. Si no es así, redirige al inicio.
+         * - Recupera el curso correspondiente al ID recibido por GET y todas las solicitudes asociadas a ese curso.
+         * - A cada solicitud se le añade un identificador único para su visualización por parte del administrador.
+         *
+         * @return array - Retorna un array asociativo con los datos para la carga de la vista del listado de solicitudes.
          */
         public function obtenerSolicitudesCurso() {
 
@@ -128,8 +185,13 @@
         }
 
         /**
-         * Para mostrar los datos de una solicitud específica sin posibilidad de modificación por medio de formulario.
-         * @return
+         * Carga los datos necesarios para mostrar la vista de gestión de una solicitud específica.
+         *
+         * Obtiene los parámetros de la solicitud mediante GET, incluyendo el ID del usuario, la fecha de presentación
+         * y el número de solicitud. Luego recupera la información completa de la solicitud, incluyendo horas seleccionadas,
+         * motivos y archivos relacionados, clasificados por tipo.
+         *
+         * @return array - Retorna un array asociativo con toda la información.
          */
         public function cargarGestionarSolicitud() {
             $idUsuario = $_GET['id'] ?? null;
@@ -149,6 +211,14 @@
             return ['vista' => 'gestionarsolicitud', 'solicitud' => $solicitud, 'horasSeleccionadas' => $horasSeleccionadas, 'motivos' => $motivos, 'justificantes' => $justificantes, 'materiales' => $materiales];
         }
         
+        /**
+         * Gestiona la actualización del estado de una solicitud específica.
+         * 
+         * Recupera los parámetros necesarios desde un GET, incluyendo el ID del usuario, la fecha de presentación, el número de solicitud y el nuevo estado. 
+         * Luego, el modelo realiza la actualización del estado de la solicitud.
+         * 
+         * @return string - Devuelve la cadena 'avisoexito' para indicar que la operación fue exitosa.
+         */
         public function gestionarEstado() {
             $idUsuario = $_GET['id'] ?? null;
             $fechaPresentacion = $_GET['fecha'] ?? null;
@@ -162,6 +232,11 @@
 
         /**
          * Carga los datos necesarios para mostrar el formulario de nueva solicitud.
+         * 
+         * Verifica si existe un curso activo en la sesión. Si no hay curso activo, devuelve una cadena indicando dicho estado.
+         * En caso contrario, recupera el ID del curso activo y los motivos disponibles desde el modelo de solicitud.
+         * 
+         * @return array|string - Devuelve un array asociativo con los datos necesarios para la vista 'formnuevasolicitud'
          */
         public function cargarDatosSolicitud() {
             if (!isset($_SESSION['idCursoActivo'])) {
@@ -175,8 +250,13 @@
         }
 
         /**
-         * Para mostrar los datos de una solicitud específica sin posibilidad de modificación por medio de formulario.
-         * @return
+         * Carga los datos necesarios para mostrar una solicitud específica sin posibilidad de modificación.
+         * 
+         * Obtiene los parámetros necesarios desde la URL mediante GET: ID del usuario, fecha de presentación y número de solicitud.
+         * Recupera la solicitud correspondiente, las horas seleccionadas, los motivos disponibles y los archivos asociados,
+         * clasificando estos últimos por tipo (justificantes y materiales).
+         *
+         * @return array - Retorna un array asociativo con toda la información (vista, datos de solicitud, horas marcadas...).
          */
         public function cargarVerSolicitud() {
             $idUsuario = $_GET['id'] ?? null;
@@ -197,8 +277,12 @@
         }
 
         /**
-         * Carga los datos de la solicitud que un usuario desea modificar.
-         * @return
+         * Carga los datos necesarios para mostrar el formulario de modificación de la que se desea modificar solicitud.
+         * 
+         * Extrae el ID del usuario, la fecha de presentación y el número de solicitud desde el GET, recupera la solicitud correspondiente, las horas seleccionadas,
+         * los motivos disponibles y los archivos asociados, clasificando estos últimos por tipo.
+         *
+         * @return array - Retorna un array asociativo con otros array para cargar toda la información de la vista.
          */
         public function cargarModificarSolicitud() {
             $idUsuario = $_GET['id'] ?? null;
@@ -219,8 +303,13 @@
         }
 
         /**
-         * Realiza la eliminación de un archivo en el servidor.
+         * Elimina físicamente un archivo del servidor.
          * Se ejecuta en el momento en que se hace una modificación de una solicitud que requiere de la eliminación de un archivo.
+         * 
+         * Este método se utiliza durante la modificación de una solicitud cuando se requiere
+         * eliminar uno de los archivos previamente subidos por el usuario.
+         *
+         * @param array $archivo Array asociativo que debe contener: 'nombre_generado' (el nuevo nombre del archivo), 'ruta_archivo' (subdirectorio dentro de src/subidas) y 'tipo_archivo' (la extensión del archivo)
          */
         private function eliminarArchivoFisico($archivo) {
             $ruta = RUTA_PROYECTO . 'src/subidas/' . $archivo['ruta_archivo'] . '/' . $archivo['nombre_generado'] . '.' . $archivo['tipo_archivo'];
@@ -231,7 +320,29 @@
         }
 
         /**
+         * Procesa una solicitud (POST). Se modifica una solicitud previamente planteada.
          * 
+         * Este método realiza las siguientes acciones:
+         * 1. Recoge los datos del formulario enviado por POST.
+         * 2. Actualiza la solicitud en la base de datos.
+         * 3. Elimina los archivos marcados por el usuario.
+         * 4. Sube y registra nuevos archivos, si se proporcionan.
+         *
+         * Requiere que existan en $_POST:
+         * - id_usuario
+         * - fecha_presentacion
+         * - num (número de solicitud)
+         * - motivo
+         * - descripcion
+         * - comentario
+         * - archivos_a_eliminar (opcional)
+         * - archivos_info (opcional)
+         *
+         * Requiere que existan en $_FILES:
+         * - justificantes (opcional)
+         * - materiales (opcional)
+         *
+         * @return string Devuelve 'avisoexito' si la modificación se ha procesado correctamente o 'saludo' si no es una petición POST.
          */
         public function modificarSolicitud() {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -294,12 +405,14 @@
 
         /**
          * Necesitamos generar nombres únicos para los archivos que se van a introducir con cada solicitud.
+         * 
          * 1. Extrae el nombre inicial.
          * 2. Extrae la extensión.
          * 3. Codificamos el nombre base por medio de un hash básico.
          * 4. Combinamos el nuevo nombre que hemos generado con la extensión.
-         * @param
-         * @return
+         * 
+         * @param string $archivo Nombre original del archivo (por ejemplo, 'documento.pdf').
+         * @return string Nombre único generado con extensión (por ejemplo, '662fb190b...a.pdf').
          */
         function generarNombreUnico($archivo) {
             $nombreBase = pathinfo($archivo, PATHINFO_FILENAME);
@@ -308,6 +421,17 @@
             return $nombreCodificado.'.'.$extension;
         }
 
+        /**
+         * Procesa y guarda un archivo subido en el subdirectorio correspondiente.
+         *
+         * - Crea el directorio si no existe.
+         * - Genera un nombre único para evitar la duplicidad de los archivos subidos, así no hay posible sobrescritura o confusión con los archivos.
+         * - Si la subida es exitosa, devuelve información relevante del archivo.
+         *
+         * @param array $archivo - Array con los datos del archivo subido (como en $_FILES).
+         * @param string $subdirectorio - Nombre del subdirectorio donde se guardará el archivo (por ejemplo, 'justificantes' o 'materiales').
+         * @return array|false - Array con información del archivo subido si tiene éxito, o false en caso de error.
+         */
         private function manejarSubidaArchivo($archivo, $subdirectorio) {
             $rutaBase = RUTA_PROYECTO . 'src/subidas/' . $subdirectorio . '/';
 
@@ -334,8 +458,8 @@
         /**
          * Procesa y guarda los archivos subidos en las rutas correspondientes.
          * 
-         * @param array $archivos El array $_FILES con los campos 'justificantes' y/o 'materiales'.
-         * @return array Un array con los nombres de los archivos subidos por cada tipo.
+         * @param array $archivos - El array $_FILES con los campos 'justificantes' y/o 'materiales'.
+         * @return array $datos - Un array con los nombres de los archivos subidos por cada tipo.
          */
         public function subirArchivosSolicitud($archivos) {
             $datos = ['justificantes' => [], 'materiales' => []];
@@ -383,6 +507,14 @@
 
         /**
          * Procesa el formulario de creación de una nueva solicitud.
+         *
+         * Este método:
+         * - Valída la existencia de los campos necesarios y el curso activo.
+         * - Comprueba que las fechas estén dentro del curso y no sean anteriores a mañana.
+         * - Rechaza si hay solapamientos con solicitudes anteriores del mismo usuario.
+         * - Inserta la solicitud, las horas seleccionadas (si las hay) y los archivos adjuntos.
+         *
+         * @return array|string - Un array que devuelve la vista y el error en caso de algún problema o la vista de éxito si la solicitud se crea correctamente.
          */
         public function crearSolicitud() {
             if (session_status() === PHP_SESSION_NONE) {

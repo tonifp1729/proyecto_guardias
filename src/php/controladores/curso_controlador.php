@@ -3,10 +3,16 @@
     require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
     require_once RUTA_MODELOS . 'curso.php';
 
+    /**
+     * Controlador encargado de la gestión de cursos.
+     */
     class Curso_controlador {
 
         private $curso;
 
+        /**
+         * Constructor de la clase. Se instancia el modelo Curso.
+         */
         public function __construct() {
             $this->curso = new Curso();
         }
@@ -14,6 +20,7 @@
         /**
          * Este método se lanza en el momento en el que se carga la sidebar, asegurandonos de que siempre que acceda un usuario 
          * la aplicación se mantiene actualizada con el último curso activo.
+         * 
          * 1. Finaliza los cursos obsoletos (si los hay).
          * 2. Comprobamos que no hay curso activo y, si no lo hay, buscamos los que puedan estar pendientes.
          * 3. Activa el curso que estaba pendiente de iniciarse.
@@ -217,6 +224,7 @@
          * 
          * Dentro de cada grupo de estado, los cursos, son ordenanos por año académico de forma descendente
          * (por ejemplo, '24-25' aparece antes que '23-24').
+         * 
          * @return array - Retorna un array asociativo con: 'accion' (el nombre de la vista a cargar) | 'cursos' (el array de cursos ya ordenado)
          */
         public function obtenerCursos() {
@@ -246,11 +254,11 @@
         /**
          * Recupera la información de un curso para su visualización o modificación.
          *
-         * Si no se proporciona un ID como argumento, intenta obtenerlo desde $_GET['id'].
-         * Si no hay un ID válido o si el curso no existe o está finalizado ('F') redirige al listado de cursos. 
-         * Si el curso existe y es modificable se retorna la vista con el formulario de modificación y los datos del curso.
+         * - Si no se proporciona un ID como argumento, intenta obtenerlo desde $_GET['id'].
+         * - Si no hay un ID válido o si el curso no existe o está finalizado ('F') redirige al listado de cursos. 
+         * - Si el curso existe y es modificable se retorna la vista con el formulario de modificación y los datos del curso.
          *
-         * @param int|null - $idCurso ID del curso a obtener. Si es null, se intenta recuperar de $_GET.
+         * @param int|null $idCurso - ID del curso a obtener. Si es null, se intenta recuperar de $_GET.
          * @return array - Devuelve un array asociativo con la clave 'vista' y, si corresponde,los datos del curso bajo la clave 'curso'.
          */
         public function obtenerCurso($idCurso = null) {
