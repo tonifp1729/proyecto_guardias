@@ -1,6 +1,6 @@
 <?php 
 
-    require_once 'C:\Users\Antonio\WorkSpace\Xampp\htdocs\espacio-proyectos\proyfg\src\config\config.php';
+    require_once '/home/proyectosevg/public_html/10/src/config/config.php';
 
     /**
      * Clase Conexiondb

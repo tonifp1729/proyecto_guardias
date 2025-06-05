@@ -1,6 +1,6 @@
 <!-- AUTOR: ANTONIO MANUEL FIGUEROA PINILLA -->
 <?php
-    require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
+    require_once '/home/proyectosevg/public_html/10/src/config/path.php';
     require_once RUTA_MODELOS . 'curso.php';
 
     /**

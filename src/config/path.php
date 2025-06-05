@@ -5,16 +5,16 @@
 
     //define('PATH_PROYECTO', '/home/proyectosevg/public_html/2daw29/');
     
-    define('ENTORNO', 'L'); // 'L' para local, 'S' para servidor
+    define('ENTORNO', 'S'); // 'L' para local, 'S' para servidor
 
     if (ENTORNO === 'S') {
         // Datos del servidor
-        define('RUTA_PROYECTO', 'https://10.proyectos.esvirgua.com/');
+        define('RUTA_PROYECTO', '/home/proyectosevg/public_html/10/');
         define('RUTA_VENDOR_AUTOLOAD', RUTA_PROYECTO . 'vendor/autoload.php');
         define('RUTA_CONFIGURACION', RUTA_PROYECTO . 'src/config/');
-        define('RUTA_MODELOS', RUTA_PROYECTO . 'src/php/model/');
-        define('RUTA_VISTAS', RUTA_PROYECTO . 'src/php/view/');
-        define('RUTA_CONTROLADORES', RUTA_PROYECTO . 'src/php/controller/');
+        define('RUTA_MODELOS', RUTA_PROYECTO . 'src/php/modelos/');
+        define('RUTA_VISTAS', RUTA_PROYECTO . 'src/php/vistas/');
+        define('RUTA_CONTROLADORES', RUTA_PROYECTO . 'src/php/controladores/');
         define('RUTA_CLIENTE', RUTA_PROYECTO . 'js/');
     } else {
         // Datos locales
