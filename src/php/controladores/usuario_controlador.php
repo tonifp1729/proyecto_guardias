@@ -1,5 +1,5 @@
 <?php
-    require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
+    require_once '/home/proyectosevg/public_html/10/src/config/path.php';
     require_once RUTA_MODELOS . 'usuario.php';
     require_once RUTA_CONFIGURACION . 'config.php';
 
@@ -37,7 +37,6 @@
          * @return string - Retorna la vista 'saludo' si el proceso es exitoso.
          */
         public function inicioSesionGoogle() {
-
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }

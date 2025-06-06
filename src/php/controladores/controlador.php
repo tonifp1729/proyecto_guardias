@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'C:/Users/Antonio/WorkSpace/Xampp/htdocs/espacio-proyectos/proyecto_guardias/src/config/path.php';
+    require_once '/home/proyectosevg/public_html/10/src/config/path.php';
  
     /**
      * Clase Controlador
@@ -22,15 +22,8 @@
          * @param array $datos Datos a extraer y pasar como variables a la vista.
          */
         public static function cargarVista($vista, $datos = []) {
-            
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
-            }
-
-            //Si no ha pasado por la autenticación y la vista no es "inicio" se forzará la redirección a la vista inicio. Así evitamos que acceda por medio del uso de un parámetro por URL
-            if (!isset($_SESSION['rol']) && $vista !== 'inicio') {
-                header("Location: index.php?accion=inicio");
-                exit;
             }
 
             extract($datos);

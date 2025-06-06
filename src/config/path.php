@@ -5,7 +5,7 @@
 
     //define('PATH_PROYECTO', '/home/proyectosevg/public_html/2daw29/');
     
-    define('ENTORNO', 'L'); // 'L' para local, 'S' para servidor
+    define('ENTORNO', 'S'); // 'L' para local, 'S' para servidor
 
     if (ENTORNO === 'S') {
         // Datos del servidor
