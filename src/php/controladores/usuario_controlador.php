@@ -37,7 +37,6 @@
          * @return string - Retorna la vista 'saludo' si el proceso es exitoso.
          */
         public function inicioSesionGoogle() {
-
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }

@@ -328,4 +328,17 @@
             return $resultado;
         }
 
+        /**
+         * Elimina un archivo asociado a una solicitud de ausencia por su ID.
+         *
+         * @param int $idArchivo - ID del archivo a eliminar.
+         * @return bool - True si se eliminó correctamente, false en caso contrario.
+         */
+        public function eliminarArchivo($idArchivo) {
+            $sql = "DELETE FROM Archivo WHERE id = ?";
+            $consulta = $this->conexion->prepare($sql);
+            $consulta->bind_param("i", $idArchivo);
+            return $consulta->execute();
+        }
+
     }

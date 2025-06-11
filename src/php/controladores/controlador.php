@@ -22,15 +22,8 @@
          * @param array $datos Datos a extraer y pasar como variables a la vista.
          */
         public static function cargarVista($vista, $datos = []) {
-            
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
-            }
-
-            //Si no ha pasado por la autenticación y la vista no es "inicio" se forzará la redirección a la vista inicio. Así evitamos que acceda por medio del uso de un parámetro por URL
-            if (!isset($_SESSION['rol']) && $vista !== 'inicio') {
-                header("Location: index.php?accion=inicio");
-                exit;
             }
 
             extract($datos);
