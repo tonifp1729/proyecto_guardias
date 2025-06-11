@@ -163,10 +163,11 @@ form button[type="submit"]:disabled {
     border: 1px solid #ff4d4d;
     color: #b30000;
     padding: 10px 15px;
-    margin-top: 15px;
+    margin: 15px auto; /* Centra horizontalmente */
     border-radius: 6px;
     max-width: 500px;
     font-family: sans-serif;
+    text-align: center; /* Centra el texto */
 }
 
 .mensaje-error p {

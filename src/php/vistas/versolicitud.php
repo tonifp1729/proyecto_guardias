@@ -43,18 +43,6 @@
             ?>" disabled>
         </div>
 
-        <!-- Descripción -->
-        <div class="grupo-form">
-            <label>Descripción:</label>
-            <textarea rows="3" disabled><?= htmlspecialchars($solicitud['descripcion_solicitud']) ?></textarea>
-        </div>
-
-        <!-- Comentario material -->
-        <div class="grupo-form">
-            <label>Comentario sobre el material:</label>
-            <textarea rows="3" disabled><?= htmlspecialchars($solicitud['comentario_material']) ?></textarea>
-        </div>
-
         <!-- Justificantes -->
         <?php if (!empty($justificantes)): ?>
             <div class="grupo-form">
@@ -71,6 +59,12 @@
             </div>
         <?php endif; ?>
 
+        <!-- Descripción -->
+        <div class="grupo-form">
+            <label>Descripción:</label>
+            <textarea rows="3" disabled><?= htmlspecialchars($solicitud['descripcion_solicitud']) ?></textarea>
+        </div>
+
         <!-- Materiales -->
         <?php if (!empty($materiales)): ?>
             <div class="grupo-form">
@@ -86,5 +80,11 @@
                 </ul>
             </div>
         <?php endif; ?>
+
+        <!-- Comentario material -->
+        <div class="grupo-form">
+            <label>Comentario sobre el material:</label>
+            <textarea rows="3" disabled><?= htmlspecialchars($solicitud['comentario_material']) ?></textarea>
+        </div>
     </div>
 </div>

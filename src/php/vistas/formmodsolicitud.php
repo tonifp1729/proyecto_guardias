@@ -53,18 +53,6 @@
             </select>
         </div>
 
-        <!-- Descripción -->
-        <div class="grupo-form">
-            <label for="descripcion">Descripción (opcional):</label>
-            <textarea id="descripcion" name="descripcion" rows="3"><?= htmlspecialchars($solicitud['descripcion_solicitud']) ?></textarea>
-        </div>
-
-        <!-- Comentario material -->
-        <div class="grupo-form">
-            <label for="comentario">Comentario sobre el material (opcional):</label>
-            <textarea id="comentario" name="comentario" rows="3"><?= htmlspecialchars($solicitud['comentario_material']) ?></textarea>
-        </div>
-
         <!-- Archivos actuales -->
         <!-- Justificantes -->
         <?php if (!empty($justificantes)): ?>
@@ -110,15 +98,28 @@
             </div>
         <?php endif; ?>
 
+        
         <!-- Nuevos archivos -->
         <div class="grupo-form">
             <label for="justificantes">Subir nuevos justificantes:</label>
             <input type="file" name="justificantes[]" id="justificantes" multiple accept=".pdf,.jpg,.jpeg,.png">
         </div>
 
+        <!-- Descripción -->
+        <div class="grupo-form">
+            <label for="descripcion">Descripción (opcional):</label>
+            <textarea id="descripcion" name="descripcion" rows="3"><?= htmlspecialchars($solicitud['descripcion_solicitud']) ?></textarea>
+        </div>
+
         <div class="grupo-form">
             <label for="materiales">Subir nuevos materiales (si procede):</label>
             <input type="file" name="materiales[]" id="materiales" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+        </div>
+
+        <!-- Comentario material -->
+         <div class="grupo-form">
+            <label for="comentario">Comentario sobre el material (opcional):</label>
+            <textarea id="comentario" name="comentario" rows="3"><?= htmlspecialchars($solicitud['comentario_material']) ?></textarea>
         </div>
 
         <button type="submit">Guardar Cambios</button>
