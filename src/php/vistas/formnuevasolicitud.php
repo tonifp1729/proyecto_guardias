@@ -41,6 +41,11 @@
         </div>
 
         <div class="grupo-form">
+            <label for="justificantes">Subir justificantes:</label>
+            <input type="file" name="justificantes[]" id="justificantes" multiple accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+
+        <div class="grupo-form">
             <label for="descripcion_solicitud">Descripción (opcional):</label>
             <textarea id="descripcion_solicitud" name="descripcion_solicitud" rows="3"></textarea>
         </div>
@@ -48,11 +53,6 @@
         <div class="grupo-form">
             <label for="comentario_material">Comentario sobre el material (opcional):</label>
             <textarea id="comentario_material" name="comentario_material" rows="3"></textarea>
-        </div>
-
-        <div class="grupo-form">
-            <label for="justificantes">Subir justificantes:</label>
-            <input type="file" name="justificantes[]" id="justificantes" multiple accept=".pdf,.jpg,.jpeg,.png">
         </div>
         
         <div class="grupo-form">
